@@ -1,0 +1,49 @@
+.content-creators {
+    padding-top: 10px;
+    /* color: #2C3E50; */
+    font-size: 14px;
+    margin-top: 20px;
+}
+.terms
+{
+    font-size: 13px;
+    /* color: #2C3E50; */
+    margin-bottom: 15px;
+}
+.terms a, .content-creators a
+{
+    color: #E74C3C;
+}
+.btn-close
+{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1em;
+    color: #2C3E50;
+    cursor: pointer;
+}
+.otp-inputs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.otp-box {
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.back-btn
+{
+    position: absolute;
+    top: 20px;
+    cursor: pointer;
+    left: 20px;
+}

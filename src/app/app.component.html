@@ -1,0 +1,101 @@
+<nav class="mobile-logo-pan">
+     <a class="navbar-brand brand_mobile" routerLink="/">
+                 <img src="images/logo.png" alt="" />
+               </a>
+              
+</nav>
+<div class="hero_area">
+  <!-- header section strats -->
+  <header class="header_section">
+     <div class="container">
+       <div class="header_nav">
+         <a class="navbar-brand brand_desktop" routerLink="/">
+           <img src="/images/logo.png" alt="" />
+         </a>
+         <div class="main_nav">
+           <div class="top_nav">
+             <ul class=" " style="visibility: hidden;">
+               <li class="">
+                 <a class="" href="#">
+                   <img src="/images/telephone.png" alt="" />
+                   <span style="font-size: 2px;"> +01 1234567890</span>
+                 </a>
+               </li>
+              
+               <!-- <li class="">
+                 <a class="" href="https://www.instagram.com/?url=https://www.drdrop.co/" target="_blank" rel="noopener">
+                   <img src="images/instagram.png" alt="" />
+                   <span>LINK YOUR INSTA</span>
+                 </a>
+               </li> -->
+             </ul>
+           </div>
+           <div class="bottom_nav">
+             <nav class="custom_nav-container">
+               <!-- <a class="navbar-brand brand_mobile" routerLink="/">
+                 <img src="images/logo.png" alt="" />
+               </a> -->
+               <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                 <span class="navbar-toggler-icon"></span>
+               </button> -->
+               <div>
+                 <div class="">
+
+                   <ul class="navbar-nav" *ngIf="!isLoggedIn">
+                     <!-- <li class="nav-item active">
+                       <a class="nav-link" routerLink="home" routerLinkActive="Active" (click)="closeNavbarOnClick()">
+                        
+                        
+                        <span class="menu-name btn btn-welcome">Welcome Page</span>
+                      </a>
+                     </li>                   -->
+                   </ul>
+                   <ul class="navbar-nav" *ngIf="isLoggedIn">
+                    <li class="nav-item">
+                      <a class="nav-link" routerLink="dashboard" routerLinkActive="Active" (click)="closeNavbarOnClick()"> 
+                        <i class="fa fa-home" aria-hidden="true"></i> 
+                        
+                        <!-- <span class="menu-name">Dashboard</span> -->
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" routerLink="profile" routerLinkActive="Active" (click)="closeNavbarOnClick()"> <i class="fa fa-user-circle" aria-hidden="true"></i> 
+                        <!-- <span class="menu-name">Profile</span> -->
+                      </a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link logout-icon"  data-toggle="modal" data-target="#logoutPopup">
+                      
+                      <!-- <i class="fa fa-sign-out" aria-hidden="true"></i> -->
+                      <img src="images/logout.png" alt="" />
+                      <!-- <span class="menu-name">Logout</span> -->
+                    </a> </li>
+                     
+                   </ul>
+                 
+                 </div>
+               </div>
+             </nav>
+           </div>
+         </div>
+       </div>
+     </div>
+   </header>
+   <!-- end header section -->
+    </div>
+    <div class="modal fade" id="logoutPopup" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+         
+          <div class="modal-body text-center pt-4 pb-4">
+            <p> Are you sure you want to logout?</p>
+      
+            <button type="button" class="btn btn-primary yes-btn" data-dismiss="modal"  (click)="logout()">Yes</button> &nbsp;
+            <button type="button" class="btn btn-primary" data-dismiss="modal" >Cancel </button> 
+          </div>
+         
+        </div>
+      </div>
+    </div>
+<app-cookies-bar></app-cookies-bar>
+<router-outlet></router-outlet>
+<app-footer></app-footer>

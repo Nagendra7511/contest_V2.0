@@ -1,0 +1,211 @@
+
+.wrapper {
+  padding: 2em;
+  /* background-color: #dbebf2; */
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+  .game-container {
+    max-width: 800px;
+    margin: 30px auto;
+    /* padding: 20px; */
+    /* background: #627aa1;*/
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+    border-radius: 10px;
+    text-align: center;
+    /* border: 2px solid #2b3d50; */
+    background: #f2f6f9;
+  }
+
+
+  h1 {
+    color: #333;
+  }
+
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    padding:10px 20px;
+    background: #ffff;
+    border-radius: 8px 8px 0 0;
+    align-items: baseline;
+  }
+
+  .game-header span {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .categories {
+    display: flex;
+    justify-content: space-between;
+    /* margin-bottom: 20px; */
+    padding: 20px;
+  }
+
+  .category {
+    width: 30%;
+    /* border: 3px dashed #ccc; */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+    background: #fff;
+    border-radius: 24px;
+    padding: 2px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+  }
+
+  .groceries {
+    border-color: #4CAF50;
+  }
+
+  .clothes {
+    border-color: #f8ee16;
+  }
+
+  .electronics {
+    border-color: #33A1FF;
+  }
+
+  .category.wrong {
+    border-color: red;
+  }
+
+  .category h3 {
+    font-size: 1.2rem;
+    padding: 20px;
+    margin: 0;
+    text-transform: capitalize;
+  }
+
+  .items {
+    display: flex;
+    justify-content: center;
+    /* margin: 20px 0; */
+    flex-wrap: wrap;
+    padding: 20px;
+  }
+
+  .item {
+    min-width: 100px;
+    height: 40px;
+    margin: 5px;
+    background-color: #ffffff;
+    border: 2px solid #fff;
+    /* border-top-left-radius: 15px; */
+    /* border-bottom-right-radius: 15px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: transform 0.2s;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+    padding: 0 8px;
+
+  }
+
+  .item:hover {
+    transform: scale(1.1);
+  }
+
+  .dragging {
+    opacity: 0.5;
+  }
+
+
+   /* Fireworks canvas styling */
+   canvas#fireworks {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Allow clicks to pass through to content */
+    z-index: 1000; /* Ensures it overlays all content */
+  }
+  .correct {
+    border: 2px solid #4CAF50; /* Green border for correct */
+    transition: border 0.3s ease-in-out;
+  }
+  
+  .incorrect {
+    border: 2px solid red; /* Red border for incorrect */
+    transition: border 0.3s ease-in-out;
+  }
+
+  
+
+  
+ 
+  
+  .popup-content button:hover {
+    background-color: #475970;
+  }
+  .custom-rotate
+  {
+    /* transform: rotate(45deg); */
+    padding-right: 5px;
+  }
+  .justify-content-end
+  {
+    justify-content: end;
+  }
+  /* .brand-img
+{
+  max-width: 100px;
+  margin: 0 auto;
+  padding-bottom: 10px;
+} */
+.game-img
+{
+  max-width: 150px;
+  margin: 0 auto;
+  
+}
+.game-img img
+{
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.btn-primary
+{
+  min-width: 200px;
+}
+/* .btn-sm
+{
+  min-width: 100px;
+} */
+.table-bordered td, .table-bordered th
+{
+  border-color: #333;
+}
+.font-14
+{
+  font-size: 14px;
+}
+.item[draggable="false"] {
+  background-color: #c4c4c4 !important; /* or any color you want */
+}
+.drag-item.sorted {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+}
+  @media (max-width: 992px)
+  {
+    .category h3
+    {
+      font-size: .8rem;
+        padding: 10px;
+        margin: 0;
+    }
+    .wrapper {
+      padding: 0em;
+  }
+  }  

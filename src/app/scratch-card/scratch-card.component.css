@@ -1,0 +1,141 @@
+.scratch-card-container {
+    position: relative;
+    display: inline-block;
+    /* border: 1px solid #ddd; */
+    /* background-color: #f1f1f1; */
+  }
+  
+  canvas {
+    display: block;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    background-image: linear-gradient(#fecc79,#fecc79, #d6c6c4,#fecc79, #fecc79);
+    border-radius: 15px;
+  }
+  
+  .reward-message {
+    left: 0;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 18px;
+    color: #333;
+    position: absolute;
+    top: 35%;
+    right: 0;
+    width: 100%;
+  }
+  
+  .reward-message p {
+    font-weight: bold;
+    color: #5f6368;
+  }
+  .wrapper {
+    padding: 2em;
+    /* background-color: #fff0d7; */
+    max-width: 800px;
+    margin: 0 auto;
+}
+.wrapper .container {
+    position: relative;
+    width: auto;
+    max-width: max-content;
+    height: 100%;
+    margin: 0 auto;
+}
+/* .brand-img
+{
+  max-width: 100px;
+  margin: 0 auto;
+  padding-bottom: 10px;
+} */
+.game-img
+{
+  max-width: 150px;
+  margin: 0 auto;
+  
+}
+.game-img img
+{
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.btn-primary
+{
+  min-width: 200px;
+}
+
+
+.scratch-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+}
+
+.scratch-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.emoji-celebration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.emoji {
+  position: absolute;
+  bottom: 0;
+  font-size: 24px;
+  animation: floatUp 1.5s ease-out forwards;
+  opacity: 0;
+  pointer-events: none;
+}
+.list-style ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-150px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+
+.reward-popup {
+  margin-top: 20px;
+  font-size: 16px;
+  color: green;
+  animation: bounceIn 0.5s ease;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+
+@media (max-width: 992px) {
+    .wrapper {
+        width: 100%;
+        margin: 0 auto;
+        padding: 1em;
+        padding-bottom: 3em;
+    }
+   
+  }

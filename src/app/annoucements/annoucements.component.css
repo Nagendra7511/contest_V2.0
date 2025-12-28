@@ -1,0 +1,90 @@
+.contest-game
+{
+    position: relative;
+    /* border: 1px solid #ccc; */
+    /* box-shadow: 4px 8px 16px 0px #808080; */
+    /* padding: 8px; */
+    border-radius: 10px;
+    background-color: #ECF0F1;
+    color: #2C3E50;
+    border: 1px solid #ccc;
+}
+.contest-game img
+{
+    max-width: 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.contest-game .game-logo
+{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 80px;
+    background-color: rgb(0 0 0 / 18%);
+    padding: 10px;
+    border-radius: 50px;
+}
+.num_players
+{
+    position: absolute;
+    top: 15px;
+    left:  15px;
+    width: 40px;
+    background-color: rgb(0 0 0 / 18%);
+    padding: 7px;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 9px;
+}
+.game-info
+{
+    padding: 15px;
+    /* background-color: #ccc; */
+}
+.play-btn
+{
+    position: absolute;
+    top: 44%;
+    left: 44%;
+    right: 50%;
+    width: 40px;
+    height: 40px;
+    /* padding:5px; */
+    /* background-color: #ccc; */
+    border-radius: 50%;
+    text-align: center;
+    cursor: pointer;
+}
+.play-icon
+{
+    position: relative;
+    cursor: pointer;
+}
+.play-icon::before
+{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: 50%;
+    width: 55px;
+    height: 55px;
+    transform: translate(-50%, -50%);
+    background-color: red;
+    background-image: linear-gradient( yellow, #c1272d ,#475978);
+    border-radius: 100%;
+    animation: fadeEffect 1.3s infinite ease;
+    box-shadow: 0px 0px 10px 0px;
+    right: initial;
+    margin: 0 auto;
+    z-index: 2;
+}
+.play-icon img
+{
+    position: relative;
+    top: -2px;
+    left: 0px;
+    z-index: 3;
+}

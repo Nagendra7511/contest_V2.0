@@ -1,0 +1,230 @@
+tr:nth-child(even) td {background-color: #f2f2f2;}
+tr th {
+    background-color: #d0d2d1;
+    color: #000;
+    /* text-align: center; */
+}
+.brand-profile-container 
+{
+    padding: 2rem;
+}
+.links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.link-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  background: #fafafa;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  transition: all 0.2s ease-in-out;
+}
+
+.link-card img {
+  width: 24px;
+  height: 24px;
+}
+
+.link-card:hover {
+  background: #f0f8ff;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+
+/* @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css'); */
+
+.brand-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 2fr));
+  gap: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+  /* padding: 20px; */
+}
+
+.brand-content h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.brand-content p {
+  margin: 0;
+  color: #000;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.brand-arrow {
+  position: absolute;
+  bottom: 20px;
+  right: 24px;
+  font-size: 1.2rem;
+  color: #000;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.brand-link-card:hover .brand-arrow {
+  transform: translateX(6px);
+  color: #000;
+}
+
+
+.others::before {
+  background: linear-gradient(90deg, #1cb5e0, #000851);
+}
+
+.others .brand-icon { color: #1cb5e0; }
+.brand-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.brand-link-card {
+  position: relative;
+  background: #8dc6ac;
+  color: #fff;
+  /* border-radius: 18px; */
+  /* box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08); */
+  transition: all 0.3s ease;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Floating icon */
+.brand-icon {
+
+  width: 40px;
+  height: 40px;
+  /* background: #fff; */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1); */
+  font-size: 1.6rem;
+}
+
+/* Share icon top-right */
+.brand-top {
+
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-share {
+  /* position: absolute; */
+  width: 40px;
+  height: 40px;
+  /* background: #fff; */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1); */
+  font-size: 1.6rem;
+}
+.brand-share1 {
+  /* position: absolute; */
+  color: #1ABC9C;
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+.brand-share:hover, .brand-share1:hover {
+  transform: scale(1.15);
+}
+.brand-link-card .brand-share, .brand-link-card .brand-icon {
+  color: #000;
+}
+
+.share-icons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.share-icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: transform .2s ease;
+}
+
+.share-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50px;
+}
+
+.share-icon:hover {
+  transform: scale(1.12);
+}
+.expired-card {
+  border: 2px solid red !important;
+  opacity: 0.7;
+  position: relative;
+}
+
+.expired-card::after {
+  content: 'Expired';
+  position: absolute;
+  top: 35px;
+  left: 0px;
+  background: red;
+  color: #fff;
+  padding: 3px 10px;
+  font-size: 12px;
+  z-index: 10;
+  border-radius: 0 34px 34px 0;
+}
+
+.subTitle
+  {
+    display: flex;
+    justify-content: space-between;
+  }
+  .insta-icon
+  {
+    width: 24px;
+  }
+  .insta-icon img
+  {
+    border-radius: 0px !important;
+  }
+  .Doted-text
+    {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      max-width: 90%;
+    }
+    .btn-green {
+    color: #fff;
+    background-color: #1abc9c;
+    border-color: #18cfab;
+}

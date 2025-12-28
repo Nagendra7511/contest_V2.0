@@ -1,0 +1,70 @@
+<section class="container mt-2">
+  <div >
+    <div class="col-12 p-0">
+      <div class="welcome-text">
+        <h2>
+        Welcome to Contest Central, <span *ngIf="profile">{{profile?.first_name}}.</span><span *ngIf="!profile"> Admin.</span>
+      </h2>
+      <p class="m-0">Join exciting contests from your favorite brands and win amazing rewards!</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+<section class="container" *ngIf="profile">
+  <div class="col-12 p-0 text-center">
+    <a routerLink="/profile" class="redirection" class="missing" *ngIf="!profile?.gender || !profile?.month_of_birth || !profile?.year_of_birth || !profile?.nationality || !profile?.first_name || !profile?.last_name || !profile?.phone_number || !profile?.phone_country_code">
+     <i class="fa fa-user-circle" aria-hidden="true"></i> 
+     
+     <span>Complete your profile to unlock all contests. Some contests are only available to users with a full profile.</span>
+    </a>
+  </div>
+</section>
+<section class="container top-bottom-space mt-4">
+   
+    <!-- Nav tabs -->
+    <ul class="nav nav-pills" role="tablist">
+      <li class="nav-item col-6 p-0">
+            <div class="blog_section nav-link active" data-toggle="tab" href="#Contests">   
+                <div class="box b1 ">
+                    <div class="detail-box">
+                      <h3>Contests</h3>
+                    </div>               
+                </div>
+            </div>
+      </li>
+      <li class="nav-item col-6 p-0">
+        <div class="blog_section nav-link" data-toggle="tab" href="#results">   
+            <div class="box b1 ">
+              <div class="detail-box">
+                    <h3> History</h3>
+              </div>
+            </div>
+        </div>
+      </li>
+      <!-- <li class="nav-item col-4 pl-0">
+        <div class="blog_section nav-link" data-toggle="tab" href="#Announcements ">   
+            <div class="box b1 ">
+                <div class="detail-box">
+                  <h3>
+                    Announcements 
+                  </h3>
+                </div>
+            </div>
+        </div>
+      </li> -->
+    </ul>
+  
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div id="Contests" class="container tab-pane active"><br>  
+        <app-contests></app-contests>
+    </div>
+      <div id="results" class="container tab-pane fade"><br>
+        <app-results></app-results>
+    </div>
+      <div id="Announcements" class="container tab-pane fade"><br>
+        <app-annoucements></app-annoucements>
+    </div>
+    </div>
+</section>

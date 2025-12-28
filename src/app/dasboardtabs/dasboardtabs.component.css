@@ -1,0 +1,47 @@
+.top-bottom-space {
+    padding-bottom: 70px !important;
+}
+
+.welcome-text {
+    padding: 20px;
+    background-color: #1ABC9C !important;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    color: #fff;
+}
+
+@media (max-width: 992px) {
+    .web-only {
+        display: none;
+    }
+
+    .welcome-text h2 {
+        font-size: 1.4rem;
+        font-weight: 700;
+    }
+}
+
+.missing {
+    background-color: #E74C3C;
+    color: white;
+    padding: 2px 15px;
+    border-radius: 4px;
+    margin-right: 6px;
+    font-size: 14px;
+    text-align: centerx;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+}
+.missing i
+{
+    font-size: 20px;
+}
+
+/* .redirection
+{
+    color: #fff;
+} */

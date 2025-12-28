@@ -1,0 +1,193 @@
+<!-- animation code -->
+
+<div class="container">
+  <!-- Animated particles -->
+  <div class="particle green" style="width:8px;height:8px;top:10%;left:5%;animation-delay:0s;"></div>
+  <div class="particle yellow" style="width:6px;height:6px;top:20%;right:8%;animation-delay:1s;"></div>
+  <div class="particle red" style="width:10px;height:10px;bottom:30%;left:12%;animation-delay:2s;"></div>
+  <div class="particle blue" style="width:7px;height:7px;top:60%;right:20%;animation-delay:3s;"></div>
+  <div class="particle green" style="width:5px;height:5px;bottom:15%;right:5%;animation-delay:4s;"></div>
+
+  <!-- Network lines -->
+  <div class="network-line line1"></div>
+  <div class="network-line line2"></div>
+  <div class="network-line line3"></div>
+
+  <!-- Floating elements -->
+  <div class="floating-element element1"></div>
+  <div class="floating-element element2"></div>
+  <div class="floating-element element3"></div>
+
+
+</div>
+
+<div class="container mt-5 mb-5 min-height-400">
+  <div class="row justify-content-center">
+    <div class="col-md-5 col-12 col-sm-9">
+
+
+
+
+      <div class="container text-center w-360">
+       
+        <div *ngIf="!isOtpSent && isOtpSent" class="login-toggle">
+
+          <button (click)="loginMethod = 'email'" [class.active]="loginMethod === 'email'">Email Login</button>
+          <button (click)="loginMethod = 'phone'" [class.active]="loginMethod === 'phone'">Phone Login</button>
+        </div>
+
+
+
+        <!-- <img src="images/logo.png" class="only-mobile pb-4" alt="" /> -->
+        <!-- <h4 >Welcome to Contest Central</h4> -->
+
+        <div *ngIf="loginMethod === 'phone' && !isOtpSent">
+           <h3>Welcome</h3>
+        <!-- <p>Login to access contests created by various brands and enjoy exciting rewards.</p> -->
+         <p>Join the excitement of winning amazing prizes!</p>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+              </div>
+
+              <select [(ngModel)]="countryCode" class="custom-select country-dropdown">
+                <option value="+1" data-code="840">USA | 1</option>
+                <option value="+44" data-code="826">GBR | 44</option>
+                <option value="+1" data-code="124">CAN | 1</option>
+                <option value="+61" data-code="036">AUS | 61</option>
+                <option value="+49" data-code="276">DEU | 49</option>
+                <option value="+33" data-code="250">FRA | 33</option>
+                <option value="+91" data-code="356" selected>IND | 91</option>
+                <option value="+86" data-code="156">CHN | 86</option>
+                <option value="+81" data-code="392">JPN | 81</option>
+                <option value="+55" data-code="076">BRA | 55</option>
+                <option value="+7" data-code="643">RUS | 7</option>
+                <option value="+27" data-code="710">ZAF | 27</option>
+                <option value="+82" data-code="410">KOR | 82</option>
+                <option value="+39" data-code="380">ITA | 39</option>
+                <option value="+34" data-code="724">ESP | 34</option>
+                <option value="+52" data-code="484">MEX | 52</option>
+                <option value="+971" data-code="784">ARE | 971</option>
+                <option value="+65" data-code="702">SGP | 65</option>
+                <option value="+60" data-code="458">MYS | 60</option>
+                <option value="+974" data-code="634">QAT | 974</option>
+                <option value="+31" data-code="528">NLD | 31</option>
+
+              </select>
+              <input type="text" class="form-control" [(ngModel)]="phone" placeholder="Phone Number">
+
+            </div>
+            <div class="terms">By using Contest Central, you agree to our <a href="/privacy-policy"><strong>privacy policy</strong></a> and <a href="/terms"><strong>terms & conditions</strong></a>
+              
+              </div>
+
+            <button (click)="sendOtp()" class="btn btn-primary w-100">Send Verification Code</button>
+            <div class="content-creators">
+              Want to launch fun contests? <a href="https://df-deal-portal-v1-dashboard-theta.vercel.app/">Click
+                here</a> to create now!
+            </div>
+            <!-- <p>Enter your mobile number to receive OTP</p> -->
+          </div>
+
+
+        </div>
+        <div *ngIf="loginMethod === 'email' && !isOtpSent">
+           <h3>Welcome</h3>
+        <!-- <p>Login to access contests created by various brands and enjoy exciting rewards.</p> -->
+         <p>Join the excitement of winning amazing prizes!</p>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fas fa-envelope"></i> </span>
+              </div>
+              <!-- <input type="email" class="form-control"  [(ngModel)]="email" placeholder="Email address" /> -->
+              <!-- <input type="email" class="form-control" [(ngModel)]="email" name="email" #emailInput="ngModel" required email
+                      placeholder="Email address" /> -->
+              <input type="email" class="form-control" [(ngModel)]="email" name="email" #emailInput="ngModel" required
+                email (keypress)="preventPlus($event)" (input)="preventPlusOnInput($event)" placeholder="Email address" />
+
+            </div>
+            <div class="terms">By using Contest Central, you agree to our <a href="/privacy-policy"><strong>privacy policy</strong></a> and <a href="/terms"><strong>terms & conditions</strong></a>
+              
+              </div>
+
+            <button (click)="sendOtp()" class="btn btn-primary w-100"
+              [disabled]="isLoading || (loginMethod === 'email' && !emailInput.valid)">
+              Send Verification Code
+            </button>
+            
+            <div class="brand-redirect">
+              <a  href="http://brands.contest-central.com/">
+                <strong class="font-16"> Are you a Brand?</strong><br/>
+                Click here to access the brand portal and manage your contests
+              
+            </a>
+            </div>
+
+
+          </div>
+        </div>
+
+
+        <!-- <div *ngIf="!isOtpSent" >
+                   
+                   <div class="terms">By using Contest Central, you accept our <a href="#">Terms and Conditions</a></div>
+                     
+                     <button (click)="sendOtp()" class="btn btn-primary w-100" [disabled]="isLoading || (loginMethod === 'email' && !emailInput.valid)" >Send Verification Code</button>
+                      <div class="content-creators">
+                      Want to launch fun contests? <a href="https://df-deal-portal-v1-dashboard-theta.vercel.app/">Click here</a> to create now!
+                    </div>
+                  </div> -->
+        <div *ngIf="isOtpSent">
+         
+
+          <div class="form-group">
+            <div class="back-btn" (click)="goBack()">
+              <i class="fa fa-arrow-left"></i>
+            </div>
+              <p *ngIf="message" class="alert alert-primary">{{ message }}</p>
+             <p>Secure verification code protects your account from unauthorized access</p>
+
+            <div class="otp-inputs" (paste)="handlePaste($event)">
+              <input
+                *ngFor="let digit of otpDigits; let i = index"
+                type="tel"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                maxlength="1"
+                class="otp-box"
+                [(ngModel)]="otpValues[i]"
+                (input)="onOtpInput($event, i)"
+                (keydown)="onOtpKeyDown($event, i)"
+                #otpInput
+              />
+            </div>
+           
+          </div>
+          <button (click)="verifyOtp()" class="btn btn-primary w-100">Verfy Code</button>
+           <div class="brand-redirect">
+              <a  href="http://brands.contest-central.com/">
+                <strong class="font-16"> Are you a Brand?</strong><br/>
+                Click here to access the brand portal and manage your contests
+              
+            </a>
+            </div>
+          
+        </div>
+
+
+
+
+
+      </div>
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>

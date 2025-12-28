@@ -1,0 +1,183 @@
+/* app.component.css */
+
+.wrapper {
+    padding: 2em ;
+    color: #212529;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .wrapper .container {
+    position: relative;
+    width: auto;
+    max-width: max-content;
+    height: 100%;
+    margin: 0 auto;
+    max-width: 800px;
+  }
+  
+  .cell-container {
+    max-width: 450px;
+    margin: 0 auto;
+  }
+  
+  /* .brand-img {
+    max-width: 100px;
+    margin: 0 auto;
+    padding-bottom: 10px;
+  } */
+  
+  .game-img {
+    max-width: 150px;
+    margin: 0 auto;
+  
+  }
+  
+  .game-img img {
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .btn-primary {
+    min-width: 200px;
+  }
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    color: #000;
+    /* background-color: #f5f5f5; */
+    /* border-bottom: 1px solid #ddd; */
+  }
+  .game-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.product-img {
+  width: 200px;
+  height: auto;
+  margin: 20px 0;
+      padding: 5px;
+    border: 1px solid #ccc;
+    background: #fff;
+}
+
+.price-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.price_button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  border: none;
+  background-color: #f0f0f0;
+  transition: 0.3s ease;
+}
+.product-count
+{
+  margin-right: 20px;
+    border: 2px solid #ffffff;
+    padding: 2px 15px;
+    border-radius: 18px;
+    background: #8cddcd;
+}
+.price_button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.correct {
+  background-color: #4caf50 !important;
+  color: white;
+}
+
+.wrong {
+  background-color: #f44336 !important;
+  color: white;
+}
+
+.result {
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+.correct-msg {
+  color: #4caf50;
+}
+
+.wrong-msg {
+  color: #f44336;
+}
+
+.progress {
+  margin-top: 15px;
+  font-style: italic;
+  color: #555;
+}
+
+.game-over {
+  text-align: center;
+  padding: 40px;
+}
+
+.finish-btn
+{
+  padding: 0px 15px;
+  border-radius:50px;
+  min-width: 100px;
+}
+.timer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+
+.price_button {
+  display: inline-block;
+  margin: 6px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  /* border: 2px solid #ccc; */
+  background-color: #f5f5f5;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect (only when not disabled) */
+.price_button:hover:not(:disabled) {
+  background-color: #c7d6f1;
+}
+
+/* Selected price before validation */
+.price_button.selected {
+  background-color: #b1c7ed;
+}
+
+/* ✅ Correct answer (green) */
+.price_button.correct {
+  background-color: #d4edda;
+  color: #155724;
+  font-weight: bold;
+}
+
+/* ❌ Wrong selected answer (red) */
+.price_button.wrong {
+  background-color: #f8d7da;
+  color: #721c24;
+  font-weight: bold;
+}
+
+/* Remove focus outline */
+.price_button:focus-visible,
+.price_button:focus-within {
+  outline: none;
+}

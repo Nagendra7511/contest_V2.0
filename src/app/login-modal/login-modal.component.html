@@ -1,0 +1,75 @@
+<!-- Modal Backdrop -->
+<div id="login_modal" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+
+      <div class="modal-header justify-content-center">
+         <div *ngIf="isOtpSent" class="back-btn" (click)="goBack()">
+              <i class="fa fa-arrow-left"></i>
+            </div>
+        <h5 class="modal-title">Login</h5>
+        <button type="button" class="btn-close" (click)="onCloseClick()" >X</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="container text-center w-360">
+          
+          <div *ngIf="loginMethod === 'email' && !isOtpSent">
+            <p>Login to access contests created by various brands and enjoy exciting rewards.</p>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"> <i class="fas fa-envelope"></i> </span>
+                </div>
+
+                <input type="email" class="form-control" [(ngModel)]="email" name="email" #emailInput="ngModel" required
+                  email (keypress)="preventPlus($event)" (input)="preventPlusOnInput($event)" placeholder="Email address" />
+
+              </div>
+              <div class="terms">By using Contest Central, you agree to our 
+                <a href="/privacy-policy"><strong>privacy policy</strong></a> and <a href="/terms"><strong>terms & conditions</strong></a>
+              </div>
+             
+              <button (click)="sendOtp()" class="btn btn-primary w-100"
+                [disabled]="isLoading || (loginMethod === 'email' && !emailInput.valid)">
+                Send Verification Code
+              </button>
+              <div class="content-creators">
+                Want to launch fun contests? <a href="http://brands.contest-central.com/">Click
+                  here</a> to create now!
+              </div>
+            </div>
+          </div>
+
+
+
+          <div *ngIf="isOtpSent">
+           
+            <div class="form-group">
+               <p>Secure verification code protects your account from unauthorized access</p>
+              <div class="otp-inputs" (paste)="handlePaste($event)">
+                <input *ngFor="let digit of otpDigits; let i = index"
+                      type="tel"
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      maxlength="1"
+                      class="otp-box"
+                      [(ngModel)]="otpValues[i]"
+                      (input)="onOtpInput($event, i)"
+                      (keydown)="onOtpKeyDown($event, i)"
+                      #otpInput />
+              </div>
+              <p>{{ message }}</p>
+            </div>
+            <button (click)="verifyOtp()" class="btn btn-primary w-100">Submit</button>
+          </div>
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<router-outlet></router-outlet>

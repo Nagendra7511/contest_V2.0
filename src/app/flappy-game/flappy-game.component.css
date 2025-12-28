@@ -1,0 +1,56 @@
+#game-container {
+  position: relative;
+  width: 100%;
+  /* max-width: 600px;
+  height: 600px; */
+  overflow: hidden;
+  margin: auto;
+  border: 2px solid #333;
+  background: linear-gradient(to bottom, #a4a5a5, #00a0e4);
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#start-screen,
+#game-over-screen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+
+
+.wrapper {
+    padding: 2em ;
+    color: #212529;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .wrapper1 {
+    padding: 0em ;
+    color: #212529;
+    /* max-width: 800px; */
+    margin: 0 auto;
+  }
+  
+  .wrapper .container {
+    position: relative;
+    width: auto;
+    max-width: max-content;
+    height: 100%;
+    margin: 0 auto;
+    /* max-width: 800px; */
+  }
+  .btn-primary {
+  min-width: 200px;
+}
+/* .game-panel
+{
+  height: 50vh;
+} */

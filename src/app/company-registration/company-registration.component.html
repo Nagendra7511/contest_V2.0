@@ -1,0 +1,134 @@
+<!-- register.component.html -->
+<div class="container top-bottom-space">
+  <div class="row">
+    <!-- Left Side Text -->
+    <div class="col-md-6 col-lg-6 mb-3">
+      <div class="reg-text">
+        <h3>Contest Creators</h3>
+        <p>
+          Join our community of content creators! Register now to start creating and sharing your content.
+        </p>
+      </div>
+    </div>
+
+    <!-- Registration Form -->
+    <div class="col-md-6 col-lg-6 mb-3">
+     
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="reg-block">
+        <!-- Account Type Dropdown -->
+        <div class="form-group input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-sitemap"></i></span>
+          </div>
+          <select class="custom-select" formControlName="accountType">
+            <option value="Individual">Individual</option>
+            <option value="Company">Company</option>
+          </select>
+        </div>
+      
+        <!-- Company Name (Visible for Company Account) -->
+        <div class="form-group input-group" *ngIf="registerForm.get('accountType')?.value === 'Company'">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-building"></i></span>
+          </div>
+          <input type="text" class="form-control" formControlName="companyName" placeholder="Company Name">
+        </div>
+      
+        <!-- First Name & Last Name -->
+        <div class="form-group input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input type="text" class="form-control" formControlName="firstName" placeholder="First Name">
+          <input type="text" class="form-control" formControlName="lastName" placeholder="Last Name">
+        </div>
+      
+        <!-- Email -->
+        <div class="form-group input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+          </div>
+          <input type="email" class="form-control" formControlName="email" placeholder="Email">
+        </div>
+      
+        <!-- Phone & OTP Buttons -->
+        <div class="form-group input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-phone"></i></span>
+          </div>
+          <select class="custom-select country-dropdown" formControlName="phoneCountryCode">
+            <option value="+91">+91</option>
+            <option value="+92">+92</option>
+            <option value="+198">+198</option>
+            <option value="+701">+701</option>
+          </select>
+          <input type="tel" class="form-control right-radius" formControlName="phoneNumber" placeholder="Phone number">
+          <button type="button" class="btn btn-success btn-custom" (click)="sendOtp()" [disabled]="isOtpSent || isSendingOtp">
+            {{ isSendingOtp ? 'Sending...' : 'Send OTP' }}
+          </button>
+        </div>
+        <p *ngIf="errorMessage" class="text-danger error-msz">{{ errorMessage }}</p>
+      
+        <!-- OTP Input Field -->
+        <div class="form-group input-group" *ngIf="isOtpSent">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-key"></i></span>
+          </div>
+          <input type="text" class="form-control right-radius" formControlName="otp" placeholder="Enter OTP">
+          <button type="button" class="btn btn-primary btn-custom" (click)="verifyOtp()" [disabled]="otpVerified || isVerifying">
+            {{ isVerifying ? 'Verifying...' : 'Verify OTP' }}
+          </button>
+        </div>
+        <p *ngIf="otpVerified" class="text-success error-msz">OTP Verified Successfully!</p>
+      
+      
+        <!-- Country Selection -->
+        <div class="form-group input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-globe"></i></span>
+          </div>
+          <select class="form-control" formControlName="country">
+            <option value="" disabled selected>Select Country</option>
+            <option value="NL">NL</option>
+            <option value="India">India</option>
+            <option value="USA">USA</option>
+          </select>
+        </div>
+      
+        <!-- Trade License Document -->
+        <label class="custom-label">Trade License Document / ID Document</label>
+        <div class="form-group input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-paperclip"></i></span>
+          </div>
+          <input type="file" (change)="onFileChange($event)" class="form-control">
+        </div>
+      
+        <!-- Instagram Link -->
+        <div class="form-group input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-share-square"></i></span>
+          </div>
+          <input type="text" class="form-control" formControlName="instagram" placeholder="Instagram link">
+        </div>
+      
+        <!-- Submit Button -->
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-block" [disabled]="!(otpVerified && registerForm.valid)">
+            Register
+          </button>
+          
+        </div>
+      
+        <!-- Link to Login -->
+        <p class="text-center custom-label">
+          Have an account? <a routerLink="/login">Log In</a>
+        </p>
+      </form>
+      
+      
+    </div>
+  </div>
+</div>
+
+<router-outlet></router-outlet>

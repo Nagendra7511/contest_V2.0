@@ -1,0 +1,10 @@
+
+.wrapper {
+  padding: 2em;
+  /* background-color: #dbebf2; */
+  max-width: 800px;
+  margin: 0 auto;
+}
+.btn-primary {
+  min-width: 200px;
+}

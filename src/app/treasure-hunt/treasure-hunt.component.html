@@ -1,0 +1,594 @@
+<!-- Loader -->
+<div class="backdrop" *ngIf="loading">
+  <div class="loader"></div>
+</div>
+
+
+<div *ngIf="admin_view" class=" col-md-8 welcome-text-admin row justify-content-center m-auto">
+  <p class="m-0">This is preview mode for brands to test the contests before publishing, your results will
+    not be recorded.</p>
+</div>
+
+<div class="brand-profile-container justify-content-center" *ngIf="showAccessMessage || showLoginButton || showContesExpired || showWelcomeScreen || showGameUpdate || showGameResult">
+  <div class="brand-profile-left" (click)="goToBrandInfo()">    
+    <div class="gradient-ring">
+      <div class="brand-profile-image" >
+        <img [src]="contest?.stores?.logo" alt="brand Logo" />
+      </div>
+    </div>
+  </div>
+  <div class="brand-profile-right">
+    <h2 class="brand-profile-name">{{contest?.stores?.name}}</h2>
+    <div class="brand-profile-stats">
+      <div>Contests <br /><svg xmlns="http://www.w3.org/2000/svg" style="margin-top: -5px;" height="20px"
+                        viewBox="0 -960 960 960" width="20px" fill="#1ABC9C">
+                        <path
+                            d="M480-517q37 0 62.5-25.5T568-605q0-37-25.5-62.5T480-693q-37 0-62.5 25.5T392-605q0 37 25.5 62.5T480-517ZM298-120v-60h152v-148q-54-11-96-46.5T296-463q-74-8-125-60t-51-125v-44q0-25 17.5-42.5T180-752h104v-88h392v88h104q25 0 42.5 17.5T840-692v44q0 73-51 125t-125 60q-16 53-58 88.5T510-328v148h152v60H298Zm-14-406v-166H180v44q0 45 29.5 78.5T284-526Zm196 141q57 0 96.5-40t39.5-97v-258H344v258q0 57 39.5 97t96.5 40Zm196-141q45-10 74.5-43.5T780-648v-44H676v166Zm-196-57Z" />
+                    </svg><strong>{{ brand.length }}</strong></div>
+      <div>Participants <br /><svg xmlns="http://www.w3.org/2000/svg" style="margin-top: -5px;margin-right: 5px;" height="20px" viewBox="0 -960 960 960"
+                        width="20px" fill="#1ABC9C">
+                        <path
+                            d="M60-413q-29-45-44.5-91T0-600q0-110 75.5-187T264-864q62 0 118 26t98 74q42-48 98-74t118-26q113 0 188.5 77T960-600q0 48-15.5 95T900-413q-8-18-21.5-31.5T848-466q20-33 30-67.5t10-66.5q0-80-54.5-136T696-792q-58 0-113 35T480-653q-48-69-103-104t-113-35q-83 0-137.5 56T72-600q0 35 10 68t30 66q-15 8-28 21.5T60-413ZM0-96v-50q0-44 45-69t123-25q12 0 21.5.5T207-237q-6 13-10.5 30t-4.5 40v71H0Zm240 0v-71q0-66 65.5-105.5T480-312q109 0 174.5 39.5T720-167v71H240Zm528 0v-71q0-24-4.5-40.5T753-237q8-2 17.5-2.5t21.5-.5q78 0 123 25t45 69v50H768ZM480-240q-75 0-116 20t-52 52h336q-11-32-52-52t-116-20Zm-312-48q-30 0-51-21t-21-51q0-30 21-51t51-21q30 0 51 21t21 51q0 30-21 51t-51 21Zm624 0q-30 0-51-21t-21-51q0-30 21-51t51-21q30 0 51 21t21 51q0 30-21 51t-51 21Zm-312-48q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm0-168q-20 0-34 14t-14 34q0 20 14 34t34 14q20 0 34-14t14-34q0-20-14-34t-34-14Zm0 48Zm0 288Z" />
+                    </svg><strong>{{ participationCount }}</strong></div>
+    </div>
+  </div>
+</div>
+
+<section class="container" *ngIf="!admin_view && (showGameUpdate || showGameResult)">
+  <div class="col-12 p-0 text-center mt-3" *ngIf="userId && (!profile?.gender 
+  || !profile?.month_of_birth 
+  || !profile?.year_of_birth 
+  || !profile?.nationality 
+  || !profile?.first_name 
+  || !profile?.last_name 
+  || !profile?.phone_number 
+  || !profile?.phone_country_code)">
+    <a routerLink="/profile" class="redirection" class="missing" >
+     <i class="fa fa-user-circle" aria-hidden="true"></i> 
+     
+     <span>Complete your profile to unlock all contests. Some contests are only available to users with a full profile.</span>
+    </a>
+  </div>
+</section>
+
+
+<!-- Contest Expired  -->
+<div *ngIf="!loading && showAccessMessage" class="wrapper welcome-screen text-center">
+
+
+  <div class="col-md-12 row justify-content-center m-0">
+    <div class="col-md-5 mb-4">
+      <div class="contest-game">
+        <div class="img-box">
+          <div class="game-banner">
+            <img [src]="contest?.background_image" alt="puzzle-img">
+          </div>
+          <div class="leaderboard" data-toggle="modal" data-target="#leaderboardModal"
+            (click)="openLeaderboard(contest.contest_id)">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+              <path
+                d="M480-517q37 0 62.5-25.5T568-605q0-37-25.5-62.5T480-693q-37 0-62.5 25.5T392-605q0 37 25.5 62.5T480-517ZM298-120v-60h152v-148q-54-11-96-46.5T296-463q-74-8-125-60t-51-125v-44q0-25 17.5-42.5T180-752h104v-88h392v88h104q25 0 42.5 17.5T840-692v44q0 73-51 125t-125 60q-16 53-58 88.5T510-328v148h152v60H298Zm-14-406v-166H180v44q0 45 29.5 78.5T284-526Zm196 141q57 0 96.5-40t39.5-97v-258H344v258q0 57 39.5 97t96.5 40Zm196-141q45-10 74.5-43.5T780-648v-44H676v166Zm-196-57Z" />
+            </svg>
+          </div>
+          <div class="play-btn">
+            <div class="total-count">
+              <p class="m-0"><i class="fa fa-users font-14" aria-hidden="true"></i> <strong> {{
+                  participationCount }}</strong></p>
+            </div>
+          </div>
+
+        </div>
+        <div class="game-info text-center">
+          <div class="row justify-content-center">
+            
+            <div class="col-md-12 ">
+              <p class="m-0">{{ contest?.contest_name }}</p>
+             <p class="m-0 font-14">{{ daysLeft }} Day(s) left</p>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+   <div class="text-center col-12">
+            <div [innerHTML]="contest?.welcome_section?.[0]?.description"></div>
+            <div *ngIf="showAccessMessage && !insta_post_view">
+                <p>Sorry, this promotion is not available in your region</p>
+                <div class="text-center col-12">
+                    <button class="btn btn-primary btn-sm text-center mt-3" (click)="goToBrandInfo()">Brand Info</button>
+                </div>
+            </div>
+        
+            <div *ngIf="insta_post_view">
+                <p>Please check this Insta post to participate in the contest.</p>
+                <div class="text-center col-12">
+                    <a [href]="contest?.insta_post_url" class="btn btn-primary btn-sm text-center mt-3">Instagram Post</a>
+                </div>
+            </div>
+        
+        </div>
+  </div>
+
+
+
+</div>
+
+<!-- Login Prompt -->
+<div *ngIf="!loading && showLoginButton" class="wrapper welcome-screen text-center">
+
+
+  <div class="col-md-12 row justify-content-center m-0">
+    <div class="col-md-5 mb-4">
+      <div class="contest-game">
+        <div class="img-box">
+          <div class="game-banner">
+            <img [src]="contest?.background_image" alt="puzzle-img">
+          </div>
+          <div class="leaderboard" data-toggle="modal" data-target="#leaderboardModal"
+            (click)="openLeaderboard(contest.contest_id)">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+              <path
+                d="M480-517q37 0 62.5-25.5T568-605q0-37-25.5-62.5T480-693q-37 0-62.5 25.5T392-605q0 37 25.5 62.5T480-517ZM298-120v-60h152v-148q-54-11-96-46.5T296-463q-74-8-125-60t-51-125v-44q0-25 17.5-42.5T180-752h104v-88h392v88h104q25 0 42.5 17.5T840-692v44q0 73-51 125t-125 60q-16 53-58 88.5T510-328v148h152v60H298Zm-14-406v-166H180v44q0 45 29.5 78.5T284-526Zm196 141q57 0 96.5-40t39.5-97v-258H344v258q0 57 39.5 97t96.5 40Zm196-141q45-10 74.5-43.5T780-648v-44H676v166Zm-196-57Z" />
+            </svg>
+          </div>
+          <div class="play-btn">
+            <div class="total-count">
+              <p class="m-0"><i class="fa fa-users font-14" aria-hidden="true"></i> <strong> {{
+                  participationCount }}</strong></p>
+            </div>
+          </div>
+
+        </div>
+        <div class="game-info text-center">
+          <div class="row justify-content-center">
+            
+            <div class="col-md-12 ">
+              <p class="m-0">{{ contest?.contest_name }}</p>
+             <p class="m-0 font-14">{{ daysLeft }} Day(s) left</p>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center col-12">
+      <div [innerHTML]="contest?.welcome_section?.[0]?.description"></div>
+      <p>You need to log in to play this game.</p>
+      <div class="text-center col-12">
+        <button class="btn btn-primary text-center mt-3" (click)="openModal()">Login</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Not Assigned Message -->
+<div *ngIf="!loading && showContesExpired" class="wrapper text-center">
+
+
+  <div class="col-md-12 row justify-content-center m-0">
+    <div class="col-md-5 mb-4">
+      <div class="contest-game">
+        <div class="img-box">
+          <div class="game-banner">
+            <img [src]="contest?.background_image" alt="puzzle-img">
+          </div>
+          <div class="leaderboard" data-toggle="modal" data-target="#leaderboardModal"
+            (click)="openLeaderboard(contest.contest_id)">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+              <path
+                d="M480-517q37 0 62.5-25.5T568-605q0-37-25.5-62.5T480-693q-37 0-62.5 25.5T392-605q0 37 25.5 62.5T480-517ZM298-120v-60h152v-148q-54-11-96-46.5T296-463q-74-8-125-60t-51-125v-44q0-25 17.5-42.5T180-752h104v-88h392v88h104q25 0 42.5 17.5T840-692v44q0 73-51 125t-125 60q-16 53-58 88.5T510-328v148h152v60H298Zm-14-406v-166H180v44q0 45 29.5 78.5T284-526Zm196 141q57 0 96.5-40t39.5-97v-258H344v258q0 57 39.5 97t96.5 40Zm196-141q45-10 74.5-43.5T780-648v-44H676v166Zm-196-57Z" />
+            </svg>
+          </div>
+          <div class="play-btn">
+            <div class="total-count">
+              <p class="m-0"><i class="fa fa-users font-14" aria-hidden="true"></i> <strong> {{
+                  participationCount }}</strong></p>
+            </div>
+          </div>
+
+        </div>
+        <div class="game-info text-center">
+          <div class="row justify-content-center">
+            
+            <div class="col-md-12 ">
+              <p class="m-0">{{ contest?.contest_name }}</p>
+             <p class="m-0 font-14">{{ daysLeft }} Day(s) left</p>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center col-12">
+      <div [innerHTML]="contest?.welcome_section?.[0]?.description"></div>
+       <p>This contest is not active. Please check out the brand info page for more contests</p>
+           <div class="text-center col-12"><button class="btn btn-primary btn-sm text-center mt-3"  (click)="goToBrandInfo()">Brand Info</button></div>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- Welcome Screen -->
+<div *ngIf="showWelcomeScreen" class="wrapper welcome-screen text-center">
+
+
+  <div class="col-md-12 row justify-content-center m-0">
+    <div class="col-md-5 mb-4">
+      <div class="contest-game">
+        <div class="img-box">
+          <div class="game-banner">
+            <img [src]="contest?.background_image" alt="puzzle-img">
+          </div>
+          <div class="leaderboard" data-toggle="modal" data-target="#leaderboardModal"
+            (click)="openLeaderboard(contest.contest_id)">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+              <path
+                d="M480-517q37 0 62.5-25.5T568-605q0-37-25.5-62.5T480-693q-37 0-62.5 25.5T392-605q0 37 25.5 62.5T480-517ZM298-120v-60h152v-148q-54-11-96-46.5T296-463q-74-8-125-60t-51-125v-44q0-25 17.5-42.5T180-752h104v-88h392v88h104q25 0 42.5 17.5T840-692v44q0 73-51 125t-125 60q-16 53-58 88.5T510-328v148h152v60H298Zm-14-406v-166H180v44q0 45 29.5 78.5T284-526Zm196 141q57 0 96.5-40t39.5-97v-258H344v258q0 57 39.5 97t96.5 40Zm196-141q45-10 74.5-43.5T780-648v-44H676v166Zm-196-57Z" />
+            </svg>
+          </div>
+          <div class="play-btn">
+            <div class="total-count">
+              <p class="m-0"><i class="fa fa-users font-14" aria-hidden="true"></i> <strong> {{
+                  participationCount }}</strong></p>
+            </div>
+          </div>
+
+        </div>
+        <div class="game-info text-center">
+          <div class="row justify-content-center">
+           
+            <div class="col-md-12 ">
+              <p class="m-0">{{ contest?.contest_name }}</p>
+             <p class="m-0 font-14">{{ daysLeft }} Day(s) left</p>
+              
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center col-12">
+      <div [innerHTML]="contest?.welcome_section?.[0]?.description"></div>
+      <p><a  data-toggle="modal" data-target="#terms" class="game-terms">Terms & Conditions</a></p>
+      
+      <!-- <button class="btn btn-primary text-center mt-3" (click)="startGame()">{{
+        contest?.welcome_section?.[0]?.button_label}}</button> -->
+        <button class="btn btn-primary text-center mt-3"  data-toggle="modal" data-target="#infoModal">Continue</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Game Panel -->
+<div *ngIf="showGamePanel" class="wrapper game-panel text-center">
+ 
+  <div class="game-panel-brand-logo">
+        <div class="game-panel-brand-profile-icon">
+            <div class="brand-profile-image">
+                <img [src]="contest?.stores?.logo" alt="brand Logo" />
+            </div>
+            <h2 class="brand-profile-name">{{contest?.stores?.name}}</h2>
+        </div>
+    </div>
+
+  <div class="d-flex justify-content-center">
+    <div class="cell-container text-center">
+      
+      <div class="game-header">
+        <p><img src="/images/speedometer.png" alt="" class="score-icon" /> {{ tries }} / {{ maxTries }}</p>
+        <p class="timer"><strong><svg xmlns="http://www.w3.org/2000/svg" style="margin-top:-5px" height="23px" viewBox="0 -960 960 960" width="23px" fill="#E74C3C">
+            <path d="M360-816v-72h240v72H360Zm84 432h72v-240h-72v240Zm36 288q-70 0-130.92-26.51-60.92-26.5-106.49-72.08-45.58-45.57-72.08-106.49Q144-362 144-432q0-70 26.51-130.92 26.5-60.92 72.08-106.49 45.57-45.58 106.49-72.08Q410-768 479.56-768q58.28 0 111.86 19.5T691-694l52-51 50 50-51 52q35 45 54.5 98.81T816-431.86q0 69.86-26.51 130.78-26.5 60.92-72.08 106.49-45.57 45.58-106.49 72.08Q550-96 480-96Zm0-72q110 0 187-77t77-187q0-110-77-187t-187-77q-110 0-187 77t-77 187q0 110 77 187t187 77Zm0-264Z"/>
+          </svg> </strong> {{ remainingTime }}s</p>
+         <div class="music-toggle text-right">
+        <button class="music-btn" (click)="toggleMusic()" [class.playing]="isMusicPlaying">
+            <span *ngIf="isMusicPlaying">🎶</span>
+            <span *ngIf="!isMusicPlaying">🔇</span>
+        </button>
+        </div>
+      </div>
+      <div id="game-container" class="grid-container">
+        <!-- <div *ngFor="let cell of cells" class="grid-cell" [ngClass]="{
+            'animate-cell': cell.animate,
+            'reveal-emoji': cell.revealAnimation
+          }" [style.backgroundColor]="cell.backgroundColor"
+          [ngStyle]="{ 'pointer-events': cell.disabled ? 'none' : 'auto' }" (click)="handleCellClick(cell)">
+          <span class="emoji">{{ cell.content }}</span>
+        </div> -->
+        <div *ngFor="let cell of cells" 
+          class="grid-cell" 
+          (click)="handleCellClick(cell)"
+          [class.disabled]="cell.disabled"
+          [class.animate]="cell.animate"
+          [style.backgroundColor]="cell.backgroundColor"
+          [class.reveal-animation]="cell.revealAnimation">
+          <img [src]="cell.imageSrc" alt="tile" />
+        </div>
+
+      </div>
+      <p class="mt-2">Tap any treasure chest on the screen.
+Win a reward if you pick the right chest.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Game Update Panel -->
+<div *ngIf="showGameUpdate" class="wrapper game-update">
+
+
+  <div class="col-md-12 row justify-content-center m-0">
+    <div class="col-md-5 mb-4">
+      <div class="contest-game">
+        <div class="img-box">
+          <div class="game-banner">
+            <img [src]="contest?.background_image" alt="treasue-image">
+          </div>
+          <div class="leaderboard" data-toggle="modal" data-target="#leaderboardModal"
+            (click)="openLeaderboard(contest.contest_id)">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+              <path
+                d="M480-517q37 0 62.5-25.5T568-605q0-37-25.5-62.5T480-693q-37 0-62.5 25.5T392-605q0 37 25.5 62.5T480-517ZM298-120v-60h152v-148q-54-11-96-46.5T296-463q-74-8-125-60t-51-125v-44q0-25 17.5-42.5T180-752h104v-88h392v88h104q25 0 42.5 17.5T840-692v44q0 73-51 125t-125 60q-16 53-58 88.5T510-328v148h152v60H298Zm-14-406v-166H180v44q0 45 29.5 78.5T284-526Zm196 141q57 0 96.5-40t39.5-97v-258H344v258q0 57 39.5 97t96.5 40Zm196-141q45-10 74.5-43.5T780-648v-44H676v166Zm-196-57Z" />
+            </svg>
+          </div>
+          <div class="play-btn">
+            <div class="total-count">
+              <p class="m-0"><i class="fa fa-users font-14" aria-hidden="true"></i> <strong> {{ participationCount
+                  }}</strong></p>
+            </div>
+          </div>
+
+        </div>
+        <div class="game-info text-center">
+          <div class="row justify-content-center">
+            
+            <div class="col-md-12 ">
+              <p class="m-0">{{ contest?.contest_name }}</p>
+            </div>
+
+            <div class="col-md-12 ">
+              <p class="m-0"> score <strong>{{ score }}</strong></p>
+              <!-- <p class="p-3"> {{ treasureDescription }}</p> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-12 text-center" [innerHTML]="contest?.final_section?.[0]?.thank_you_message"></div>
+    <div class="col-12 text-center">
+      <a  data-toggle="modal" data-target="#terms" class="game-terms">Terms & Conditions</a>
+    </div>
+    <div class="social_box mt-2">
+      <a *ngIf="contest?.stores?.links?.social_links?.Instagram"
+        href="{{contest?.stores?.links?.social_links.Instagram}}" target="_blank">
+        <img src="images/insta.png" alt="instagram">
+      </a>
+      <a *ngIf="contest?.stores?.links?.social_links?.whatsapp" href="{{contest?.stores?.links?.social_links.whatsapp}}"
+        target="_blank">
+        <img src="images/whatsapp.png" alt="whatsapp">
+      </a>
+      <a *ngIf="contest?.stores?.links?.social_links?.facebook" href="{{contest?.stores?.links?.social_links.facebook}}"
+        target="_blank">
+        <img src="images/fb.png" alt="facebook">
+      </a>
+      <a *ngIf="contest?.stores?.links?.social_links?.youtube" href="{{contest?.stores?.links?.social_links.youtube}}"
+        target="_blank">
+        <img src="images/you_tube.png" alt="youtube">
+      </a>
+      <a *ngIf="contest?.stores?.links?.social_links?.snapchat" href="{{contest?.stores?.links?.social_links.snapchat}}"
+        target="_blank">
+        <img src="images/snap.png" alt="snapchat">
+      </a>
+      <a *ngIf="contest?.stores?.links?.social_links?.x" href="{{contest?.stores?.links?.social_links.x}}"
+        target="_blank">
+        <img src="images/x.png" alt="X">
+      </a>
+      <a *ngIf="contest?.stores?.links?.social_links?.threads" href="{{contest?.stores?.links?.social_links.threads}}"
+        target="_blank">
+        <img src="images/thread.png" alt="thread">
+      </a>
+
+      <a *ngIf="contest?.stores?.links?.social_links?.tiktok" href="{{contest?.stores?.links?.social_links.tiktok}}"
+        target="_blank">
+        <img src="images/tiktok.png" alt="tiktok">
+      </a>
+    </div>
+    <div class="text-center col-12"><button class="btn btn-primary btn-sm text-center mt-3"  (click)="goToBrandInfo()">Brand Info</button></div>
+
+  </div>
+
+
+</div>
+
+<!-- Game Results Panel -->
+<div *ngIf="showGameResult" class="wrapper game-update">
+
+
+  <div class="col-md-12 row justify-content-center m-0">
+    <div class="col-md-5 mb-4">
+      <div class="contest-game">
+        <div class="img-box">
+          <div class="game-banner">
+            <img [src]="contest?.background_image" alt="treasue-image">
+          </div>
+          <div class="leaderboard" data-toggle="modal" data-target="#leaderboardModal"
+            (click)="openLeaderboard(contest.contest_id)">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+              <path
+                d="M480-517q37 0 62.5-25.5T568-605q0-37-25.5-62.5T480-693q-37 0-62.5 25.5T392-605q0 37 25.5 62.5T480-517ZM298-120v-60h152v-148q-54-11-96-46.5T296-463q-74-8-125-60t-51-125v-44q0-25 17.5-42.5T180-752h104v-88h392v88h104q25 0 42.5 17.5T840-692v44q0 73-51 125t-125 60q-16 53-58 88.5T510-328v148h152v60H298Zm-14-406v-166H180v44q0 45 29.5 78.5T284-526Zm196 141q57 0 96.5-40t39.5-97v-258H344v258q0 57 39.5 97t96.5 40Zm196-141q45-10 74.5-43.5T780-648v-44H676v166Zm-196-57Z" />
+            </svg>
+          </div>
+          <div class="play-btn">
+            <div class="total-count">
+              <p class="m-0"><i class="fa fa-users font-14" aria-hidden="true"></i> <strong> {{ participationCount
+                  }}</strong></p>
+            </div>
+          </div>
+
+        </div>
+        <div class="game-info text-center">
+          <div class="row justify-content-center">
+             
+            <div class="col-md-12 ">
+              <p class="m-0">{{ contest?.contest_name }}</p>
+            </div>
+
+            <div class="col-md-12 ">
+              <p class="m-0"> score <strong>{{ gameResult.score}}</strong></p>
+              <!-- <p class="p-3"> {{ treasureDescription }}</p> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-12 text-center" [innerHTML]="contest?.final_section?.[0]?.thank_you_message"></div>
+    <div class="col-12 text-center">
+      <a  data-toggle="modal" data-target="#terms" class="game-terms">Terms & Conditions</a>
+    </div>
+    <div class="social_box mt-2">
+      <a *ngIf="contest?.stores?.links?.social_links?.Instagram"
+        href="{{contest?.stores?.links?.social_links.Instagram}}" target="_blank">
+        <img src="images/insta.png" alt="instagram">
+      </a>
+      <a *ngIf="contest?.stores?.links?.social_links?.whatsapp" href="{{contest?.stores?.links?.social_links.whatsapp}}"
+        target="_blank">
+        <img src="images/whatsapp.png" alt="whatsapp">
+      </a>
+      <a *ngIf="contest?.stores?.links?.social_links?.facebook" href="{{contest?.stores?.links?.social_links.facebook}}"
+        target="_blank">
+        <img src="images/fb.png" alt="facebook">
+      </a>
+      <a *ngIf="contest?.stores?.links?.social_links?.youtube" href="{{contest?.stores?.links?.social_links.youtube}}"
+        target="_blank">
+        <img src="images/you_tube.png" alt="youtube">
+      </a>
+      <a *ngIf="contest?.stores?.links?.social_links?.snapchat" href="{{contest?.stores?.links?.social_links.snapchat}}"
+        target="_blank">
+        <img src="images/snap.png" alt="snapchat">
+      </a>
+      <a *ngIf="contest?.stores?.links?.social_links?.x" href="{{contest?.stores?.links?.social_links.x}}"
+        target="_blank">
+        <img src="images/x.png" alt="X">
+      </a>
+      <a *ngIf="contest?.stores?.links?.social_links?.threads" href="{{contest?.stores?.links?.social_links.threads}}"
+        target="_blank">
+        <img src="images/thread.png" alt="thread">
+      </a>
+
+      <a *ngIf="contest?.stores?.links?.social_links?.tiktok" href="{{contest?.stores?.links?.social_links.tiktok}}"
+        target="_blank">
+        <img src="images/tiktok.png" alt="tiktok">
+      </a>
+    </div>
+    <div class="text-center col-12"><button class="btn btn-primary btn-sm text-center mt-3"  (click)="goToBrandInfo()">Brand Info</button></div>
+
+  </div>
+
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="leaderboardModal" tabindex="-1" role="dialog" aria-labelledby="leaderboardModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Leaderboard</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="w-100 table table-striped" *ngIf="!utilService.loading && utilService.leaderBoardList.length > 0">
+          <tbody>
+            <tr *ngFor="let item of utilService.leaderBoardList">
+              <td width="70">{{ item.first_name ?? item.instagram_url }}</td>
+              <td width="30" class="text-center">{{ item.score }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p *ngIf="utilService.notificationMessage" class="leaderBoard-notification">{{ utilService.notificationMessage
+          }}</p>
+        <!-- <p class="m-0 text-center" *ngIf="!utilService.loading && utilService.messageError">
+        {{ utilService.messageError }}
+      </p> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- The Info Modal -->
+  <div class="modal" id="infoModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Treasure Hunt</h4>
+          <button type="button" class="close popup-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+           <div class="text-center mb-3">
+            <img src="images/treasue-gif.gif" alt="instagram">
+           </div>
+           <p><b>Instructions</b></p>
+            <p>Tap any treasure chest on the screen.
+Win a reward if you pick the right chest.
+Keep trying until all your chances are used!</p>
+           <div class="text-center">
+            <button class="btn btn-primary text-center mt-3" (click)="startGame()">{{
+                contest?.welcome_section?.[0]?.button_label}}</button>
+           </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The terms Modal -->
+  <div class="modal" id="terms">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Terms & Conditions</h4>
+          <button type="button" class="close"  data-dismiss="modal" aria-label="Close">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          
+           <p class="list-style" [innerHTML]="contest?.final_section?.[0]?.terms_and_conditions"></p>
+           <p>I consent to share my profile information for marketing communications and agree to the terms & conditions</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="backdrop" *ngIf="loading">
+  <div class="loader"></div>
+</div>
+<!-- Login Modal -->
+<app-login-modal *ngIf="showModal" (close)="close()" (loginComplete)="closeModal($event)"></app-login-modal>
+<!-- Profile Modal   -->
+<app-profile-modal *ngIf="showProfileModal" (close)="closeModal($event)"></app-profile-modal>
+<!-- Confetti Component -->
+<app-confitti *ngIf="confetti"></app-confitti>

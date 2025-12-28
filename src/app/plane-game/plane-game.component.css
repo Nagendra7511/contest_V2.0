@@ -1,0 +1,43 @@
+.wrapper {
+    padding: 2em ;
+    color: #212529;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .wrapper .container {
+    /* position: relative; */
+    width: auto;
+    max-width: max-content;
+    height: 100%;
+    margin: 0 auto;
+    max-width: 800px;
+  }
+  
+
+  /* .brand-img {
+    max-width: 100px;
+    margin: 0 auto;
+    padding-bottom: 10px;
+  } */
+  
+  .game-img {
+    max-width: 150px;
+    margin: 0 auto;
+  
+  }
+  
+  .game-img img {
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .btn-primary {
+    min-width: 200px;
+  }
+canvas {
+  display: block;
+  width: 95vw;
+  height: 80vh;
+  touch-action: none;
+}

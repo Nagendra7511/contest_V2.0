@@ -1,0 +1,12 @@
+<div *ngIf="showBar" class="cookie-bar">
+ <div class="cookie-bar-content">
+     <p>
+   We use cookies to enhance your browsing experience, serve personalised ads or content, and analyse our traffic. By clicking "Accept All", you consent to our use of cookies.
+  </p>
+ <div class="d-flex justify-content-end">
+   
+  <button  class="btn btn-primary"  (click)="rejectCookies()">Reject All</button> 
+  <button class="btn btn-primary accept-btn" (click)="acceptCookies()">Accept All</button>
+ </div>
+ </div>
+</div>

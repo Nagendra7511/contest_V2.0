@@ -1,0 +1,426 @@
+<!-- Modal Backdrop -->
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+
+      <div class="modal-header justify-content-center">
+        <h5 class="modal-title">Profile</h5>
+        <!-- <button type="button" class="btn-close" (click)="close()"></button> -->
+      </div>
+
+      <div class="modal-body">
+        <form *ngIf="!loading" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+
+            <!-- First Name & Last Name -->
+            <div class="form-group input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-user"></i></span>
+              </div>
+              <input class="form-control" type="text" placeholder="First Name *" formControlName="first_name">
+              <input class="form-control" type="text" placeholder="Last Name *" formControlName="last_name">
+            </div>
+            <p class="text-danger">
+              <span   *ngIf="profileForm.get('first_name')?.invalid && profileForm.get('first_name')?.touched">First name is required.</span>
+              <span *ngIf="profileForm.get('last_name')?.invalid && profileForm.get('last_name')?.touched"> Last name is required.</span>
+            </p>
+            <!-- Email -->
+            <div class="form-group input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+              </div>
+              <input class="form-control" type="email" formControlName="email" [disabled]="true">
+
+            </div>
+            
+            <!-- Phone -->
+            <div class="form-group input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-phone"></i></span>
+              </div>
+               <!-- <input class="form-control" type="text" placeholder="+91" formControlName="phone_country_code" style="max-width: 100px;"> -->
+              
+               <!--country select -->
+              <!-- <select class="form-control" formControlName="phone_country_code" style="max-width: 150px;">
+              <option value="+93" data-code="93">AFG | +93</option>
+              <option value="+355" data-code="355">ALB | +355</option>
+              <option value="+213" data-code="213">DZA | +213</option>
+              <option value="+1-684" data-code="1-684">ASM | +1‑684</option>
+              <option value="+376" data-code="376">AND | +376</option>
+              <option value="+244" data-code="244">AGO | +244</option>
+              <option value="+1-264" data-code="1-264">AIA | +1‑264</option>
+              <option value="+672" data-code="672">ATA | +672</option>
+              <option value="+1-268" data-code="1-268">ATG | +1‑268</option>
+              <option value="+54" data-code="54">ARG | +54</option>
+              <option value="+374" data-code="374">ARM | +374</option>              
+              <option value="+971" data-code="971">ARE | +971</option>
+              <option value="+297" data-code="297">ABW | +297</option>
+              <option value="+61" data-code="61">AUS | +61</option>
+              <option value="+43" data-code="43">AUT | +43</option>
+              <option value="+994" data-code="994">AZE | +994</option>
+              <option value="+1-242" data-code="1-242">BHS | +1‑242</option>
+              <option value="+973" data-code="973">BHR | +973</option>
+              <option value="+880" data-code="880">BGD | +880</option>
+              <option value="+1-246" data-code="1-246">BRB | +1‑246</option>
+              <option value="+375" data-code="375">BLR | +375</option>
+              <option value="+32" data-code="32">BEL | +32</option>
+              <option value="+501" data-code="501">BLZ | +501</option>
+              <option value="+229" data-code="229">BEN | +229</option>
+              <option value="+1441" data-code="1441">BMU | +1441</option>
+              <option value="+975" data-code="975">BTN | +975</option>
+              <option value="+591" data-code="591">BOL | +591</option>
+              <option value="+387" data-code="387">BIH | +387</option>
+              <option value="+267" data-code="267">BWA | +267</option>
+              <option value="+55" data-code="55">BRA | +55</option>
+              <option value="+246" data-code="246">IOT | +246</option>
+              <option value="+673" data-code="673">BRN | +673</option>
+              <option value="+359" data-code="359">BGR | +359</option>
+              <option value="+226" data-code="226">BFA | +226</option>
+              <option value="+257" data-code="257">BDI | +257</option>
+              <option value="+855" data-code="855">KHM | +855</option>
+              <option value="+237" data-code="237">CMR | +237</option>
+              <option value="+1-345" data-code="1-345">CYM | +1‑345</option>
+              <option value="+236" data-code="236">CAF | +236</option>
+              <option value="+235" data-code="235">TCD | +235</option>
+              <option value="+56" data-code="56">CHL | +56</option>
+              <option value="+86" data-code="86">CHN | +86</option>
+              <option value="+61" data-code="61">CXR | +61</option>
+              <option value="+61" data-code="61">CCK | +61</option>
+              <option value="+57" data-code="57">COL | +57</option>
+              <option value="+269" data-code="269">COM | +269</option>
+              <option value="+242" data-code="242">COG | +242</option>
+              <option value="+243" data-code="243">COD | +243</option>
+              <option value="+682" data-code="682">COK | +682</option>
+              <option value="+506" data-code="506">CRI | +506</option>
+              <option value="+225" data-code="225">CIV | +225</option>
+              <option value="+385" data-code="385">HRV | +385</option>
+              <option value="+53" data-code="53">CUB | +53</option>
+              <option value="+599" data-code="599">CUW | +599</option>
+              <option value="+357" data-code="357">CYP | +357</option>
+              <option value="+420" data-code="420">CZE | +420</option>
+              <option value="+45" data-code="45">DNK | +45</option>
+              <option value="+253" data-code="253">DJI | +253</option>
+              <option value="+1-767" data-code="1-767">DMA | +1‑767</option>
+              <option value="+1-809" data-code="1-809">DOM | +1‑809</option>
+              <option value="+593" data-code="593">ECU | +593</option>
+              <option value="+20" data-code="20">EGY | +20</option>
+              <option value="+503" data-code="503">SLV | +503</option>
+              <option value="+240" data-code="240">GNQ | +240</option>
+              <option value="+291" data-code="291">ERI | +291</option>
+              <option value="+372" data-code="372">EST | +372</option>
+              <option value="+251" data-code="251">ETH | +251</option>
+              <option value="+500" data-code="500">FLK | +500</option>
+              <option value="+298" data-code="298">FRO | +298</option>
+              <option value="+679" data-code="679">FJI | +679</option>
+              <option value="+358" data-code="358">FIN | +358</option>
+              <option value="+33" data-code="33">FRA | +33</option>
+              <option value="+594" data-code="594">GUF | +594</option>
+              <option value="+689" data-code="689">PYF | +689</option>
+              <option value="+241" data-code="241">GAB | +241</option>
+              <option value="+220" data-code="220">GMB | +220</option>
+              <option value="+995" data-code="995">GEO | +995</option>
+              <option value="+49" data-code="49">DEU | +49</option>
+              <option value="+233" data-code="233">GHA | +233</option>
+              <option value="+350" data-code="350">GIB | +350</option>
+              <option value="+30" data-code="30">GRC | +30</option>
+              <option value="+299" data-code="299">GRL | +299</option>
+              <option value="+1-473" data-code="1-473">GRD | +1‑473</option>
+              <option value="+590" data-code="590">GLP | +590</option>
+              <option value="+1-671" data-code="1-671">GUM | +1‑671</option>
+              <option value="+502" data-code="502">GTM | +502</option>
+              <option value="+224" data-code="224">GIN | +224</option>
+              <option value="+245" data-code="245">GNB | +245</option>
+              <option value="+592" data-code="592">GUY | +592</option>
+              <option value="+509" data-code="509">HTI | +509</option>
+              <option value="+379" data-code="379">VAT | +379</option>
+              <option value="+504" data-code="504">HND | +504</option>
+              <option value="+852" data-code="852">HKG | +852</option>
+              <option value="+36" data-code="36">HUN | +36</option>
+              <option value="+354" data-code="354">ISL | +354</option>
+              <option value="+91" data-code="91">IND | +91</option>
+              <option value="+62" data-code="62">IDN | +62</option>
+              <option value="+98" data-code="98">IRN | +98</option>
+              <option value="+964" data-code="964">IRQ | +964</option>
+              <option value="+353" data-code="353">IRL | +353</option>
+              <option value="+44" data-code="44">IMN | +44</option>
+              <option value="+972" data-code="972">ISR | +972</option>
+              <option value="+39" data-code="39">ITA | +39</option>
+              <option value="+1-876" data-code="1-876">JAM | +1‑876</option>
+              <option value="+81" data-code="81">JPN | +81</option>
+              <option value="+856" data-code="856">LAO | +856</option>
+              <option value="+371" data-code="371">LVA | +371</option>
+              <option value="+961" data-code="961">LBN | +961</option>
+              <option value="+266" data-code="266">LSO | +266</option>
+              <option value="+231" data-code="231">LBR | +231</option>
+              <option value="+218" data-code="218">LBY | +218</option>
+              <option value="+423" data-code="423">LIE | +423</option>
+              <option value="+370" data-code="370">LTU | +370</option>
+              <option value="+352" data-code="352">LUX | +352</option>
+              <option value="+853" data-code="853">MAC | +853</option>
+              <option value="+389" data-code="389">MKD | +389</option>
+              <option value="+261" data-code="261">MDG | +261</option>
+              <option value="+265" data-code="265">MWI | +265</option>
+              <option value="+60" data-code="60">MYS | +60</option>
+              <option value="+960" data-code="960">MDV | +960</option>
+              <option value="+223" data-code="223">MLI | +223</option>
+              <option value="+356" data-code="356">MLT | +356</option>
+              <option value="+692" data-code="692">MHL | +692</option>
+              <option value="+596" data-code="596">MTQ | +596</option>
+              <option value="+222" data-code="222">MRT | +222</option>
+              <option value="+230" data-code="230">MUS | +230</option>
+              <option value="+52" data-code="52">MEX | +52</option>
+              <option value="+377" data-code="377">MCO | +377</option>
+              <option value="+976" data-code="976">MNG | +976</option>
+              <option value="+382" data-code="382">MNE | +382</option>
+              <option value="+1-664" data-code="1-664">MSR | +1‑664</option>
+              <option value="+212" data-code="212">MAR | +212</option>
+              <option value="+258" data-code="258">MOZ | +258</option>
+              <option value="+95" data-code="95">MMR | +95</option>
+              <option value="+264" data-code="264">NAM | +264</option>
+              <option value="+674" data-code="674">NRU | +674</option>
+              <option value="+977" data-code="977">NPL | +977</option>
+              <option value="+31" data-code="31">NLD | +31</option>
+              <option value="+64" data-code="64">NZL | +64</option>
+              <option value="+687" data-code="687">NCL | +687</option>
+              <option value="+505" data-code="505">NIC | +505</option>
+              <option value="+227" data-code="227">NER | +227</option>
+              <option value="+234" data-code="234">NGA | +234</option>
+              <option value="+683" data-code="683">NIU | +683</option>
+              <option value="+672" data-code="672">NFK | +672</option>
+              <option value="+47" data-code="47">NOR | +47</option>
+              <option value="+92" data-code="92">PAK | +92</option>
+              <option value="+680" data-code="680">PLW | +680</option>
+              <option value="+970" data-code="970">PSE | +970</option>
+              <option value="+507" data-code="507">PAN | +507</option>
+              <option value="+675" data-code="675">PNG | +675</option>
+              <option value="+595" data-code="595">PRY | +595</option>
+              <option value="+51" data-code="51">PER | +51</option>
+              <option value="+63" data-code="63">PHL | +63</option>
+              <option value="+48" data-code="48">POL | +48</option>
+              <option value="+351" data-code="351">PRT | +351</option>
+              <option value="+1-787" data-code="1-787">PRI | +1‑787</option>
+              <option value="+974" data-code="974">QAT | +974</option>
+              <option value="+262" data-code="262">REU | +262</option>
+              <option value="+40" data-code="40">ROU | +40</option>
+              <option value="+7" data-code="7">RUS | +7</option>
+              <option value="+250" data-code="250">RWA | +250</option>
+              <option value="+590" data-code="590">BLM | +590</option>
+              <option value="+290" data-code="290">SHN | +290</option>
+              <option value="+1-869" data-code="1-869">KNA | +1‑869</option>
+              <option value="+1-758" data-code="1-758">LCA | +1‑758</option>
+              <option value="+1-784" data-code="1-784">VCT | +1‑784</option>
+              <option value="+685" data-code="685">WSM | +685</option>
+              <option value="+378" data-code="378">SMR | +378</option>
+              <option value="+239" data-code="239">STP | +239</option>
+              <option value="+966" data-code="966">SAU | +966</option>
+              <option value="+221" data-code="221">SEN | +221</option>
+              <option value="+381" data-code="381">SRB | +381</option>
+              <option value="+248" data-code="248">SYC | +248</option>
+              <option value="+232" data-code="232">SLE | +232</option>
+              <option value="+65" data-code="65">SGP | +65</option>
+              <option value="+1-721" data-code="1-721">SXM | +1‑721</option>
+              <option value="+421" data-code="421">SVK | +421</option>
+              <option value="+386" data-code="386">SVN | +386</option>
+              <option value="+677" data-code="677">SLB | +677</option>
+              <option value="+252" data-code="252">SOM | +252</option>
+              <option value="+27" data-code="27">ZAF | +27</option>
+              <option value="+82" data-code="82">KOR | +82</option>
+              <option value="+211" data-code="211">SSD | +211</option>
+              <option value="+34" data-code="34">ESP | +34</option>
+              <option value="+94" data-code="94">LKA | +94</option>
+              <option value="+249" data-code="249">SDN | +249</option>
+              <option value="+597" data-code="597">SUR | +597</option>
+              <option value="+268" data-code="268">SWZ | +268</option>
+              <option value="+46" data-code="46">SWE | +46</option>
+              <option value="+41" data-code="41">CHE | +41</option>
+              <option value="+963" data-code="963">SYR | +963</option>
+              <option value="+886" data-code="886">TWN | +886</option>
+              <option value="+992" data-code="992">TJK | +992</option>
+              <option value="+255" data-code="255">TZA | +255</option>
+              <option value="+66" data-code="66">THA | +66</option>
+              <option value="+228" data-code="228">TGO | +228</option>
+              <option value="+690" data-code="690">TKL | +690</option>
+              <option value="+676" data-code="676">TON | +676</option>
+              <option value="+1-868" data-code="1-868">TTO | +1‑868</option>
+              <option value="+216" data-code="216">TUN | +216</option>
+              <option value="+90" data-code="90">TUR | +90</option>
+              <option value="+993" data-code="993">TKM | +993</option>
+              <option value="+688" data-code="688">TUV | +688</option>
+              <option value="+256" data-code="256">UGA | +256</option>
+              <option value="+380" data-code="380">UKR | +380</option>
+              <option value="+44" data-code="44">GBR | +44</option>
+              <option value="+1-284" data-code="1-284">VGB | +1‑284</option>
+              <option value="+1-340" data-code="1-340">VIR | +1‑340</option>
+              <option value="+58" data-code="58">VEN | +58</option>
+              <option value="+84" data-code="84">VNM | +84</option>
+              <option value="+681" data-code="681">WLF | +681</option>
+              <option value="+212" data-code="212">ESH | +212</option>
+              <option value="+967" data-code="967">YEM | +967</option>
+              <option value="+260" data-code="260">ZMB | +260</option>
+              <option value="+263" data-code="263">ZWE | +263</option>
+
+
+              </select> -->
+              
+               <div class="select-box custom-dropdown form-control" (click)="openCodePopup()">
+                  {{ selectedCodeLabel }} <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#2C3E50"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
+              </div>
+               <input class="form-control" type="number" placeholder="Phone Number *" formControlName="phone_number *">            
+            </div>
+             <p class="text-danger" *ngIf="profileForm.get('phone_number')?.invalid && profileForm.get('phone_number')?.touched"> Phone number is required.
+            </p>
+
+            <!-- gender Selection -->
+            <!-- <div class="form-group input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-venus-mars"></i></span>
+              </div>
+              <select class="form-control" formControlName="gender">
+                <option value="" disabled >Gender</option>
+                <option value="Male" data-code="Male">Male</option>
+                <option value="Female" data-code="Female">Female</option>
+              </select>
+            </div> -->
+
+            <!-- Date of Birth -->
+              <!-- <div class="form-group input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+              </div>
+              <select class="form-control" formControlName="month_of_birth">
+                <option value="" disabled selected>Month of Birth</option>
+              
+                <option value="1" data-code="1">1</option>
+                <option value="2" data-code="2">2</option>
+                 <option value="3" data-code="3">3</option>
+                <option value="4" data-code="4">4</option>
+                 <option value="5" data-code="5">5</option>
+                <option value="6" data-code="6">6</option>
+                 <option value="7" data-code="7">7</option>
+                <option value="8" data-code="8">8</option>
+                 <option value="9" data-code="9">9</option>
+                <option value="10" data-code="10">10</option>
+                 <option value="11" data-code="11">11</option>
+                <option value="12" data-code="12">12</option>
+              </select>
+               <select class="form-control" formControlName="year_of_birth">
+                 <option value="" disabled selected >Year of Birth</option>
+                 <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+              </select>
+            </div> -->
+            
+           <div class="form-group">
+              <!-- County of Residence -->
+              <!-- <label for="countrySelect" class="pl-40">County of Residence</label> -->
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                </div>
+                <select id="countrySelect" class="form-control" formControlName="country_of_residance">
+                  <option value="" disabled selected>County of Residence</option>
+                  <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+                </select>
+              </div>
+               <p class="text-danger" *ngIf="profileForm.get('country_of_residance')?.invalid && profileForm.get('country_of_residance')?.touched"> Phone number is required.
+            
+              <!-- Nationality -->
+              <!-- <label for="nationalitySelect" class="pl-40">Nationality</label> -->
+              <!-- <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-flag"></i></span>
+                </div>
+                <select id="nationalitySelect" class="form-control" formControlName="nationality">
+                  <option value="" disabled selected>Nationality</option>
+                  <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+                </select>
+              </div> -->
+            </div>
+
+
+            <!-- Instagram Link -->
+            <!-- <div class="form-group input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-instagram"></i> <img src="images/instagram-gg.png" alt="" /></span>
+              </div>
+              <input class="form-control" type="text" class="form-control" formControlName="instagram_url"
+                placeholder="Instagram User Name">
+            </div> -->
+
+            <!-- Submit Button -->
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary btn-block">
+                UPDATE
+              </button>
+            </div>
+          </form>
+          <!-- Link to Login -->
+          <!-- <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p> -->
+          <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+        </div>
+
+    </div>
+  </div>
+</div>
+<!-- Confirmation Modal -->
+<div class="modal fade" id="profileUpdatedModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+     
+      <div class="modal-body text-center">
+        <p>Profile updated successfully.</p>
+        <button type="button" class="btn btn-primary" (click)="onModalOk()" >OK</button>
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+
+<!-- Popup -->
+<div class="popup-backdrop" *ngIf="showCodePopup">
+  <div class="popup">
+   <div class="form-group input-group">
+
+      <div class="input-group-prepend">
+        <span class="input-group-text"> <i class="fa fa-search"></i> </span>
+      </div>
+       <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Search for countries"
+      class=" form-control"
+    />
+    </div>
+<!-- Sorting buttons -->
+    <div class="sort-controls">
+      <button
+        type="button"
+        class="sort-btn"
+        [class.active]="sortMode === 'alphabetical'"
+        (click)="setSortMode('alphabetical')"
+      >
+        Alphabetical
+
+        <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall mui-9t10t7" focusable="false" aria-hidden="true" viewBox="0 0 20 20" data-testid="AlphabeticalSortIcon" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 14L5.5 17L8.5 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5.5 3V17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M17.5 8L15 3L12.5 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.9189 7.16199H17.0809" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.8945 12H17.1055L12.8945 17H17.1055" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </button>
+      <button
+        type="button"
+        class="sort-btn"
+        [class.active]="sortMode === 'numerical'"
+        (click)="setSortMode('numerical')"
+      >
+        Numerical
+
+        <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall mui-9t10t7" focusable="false" aria-hidden="true" viewBox="0 0 20 20" data-testid="NumericalSortIcon" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 14L6 17L9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6 3V17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.131 2.68182V8.5H14.7276V3.99432H14.6935L13.3924 4.78977V3.57386L14.8271 2.68182H16.131Z" fill="currentColor"></path><path d="M14.9361 11.6023C15.2353 11.6023 15.5232 11.6525 15.7997 11.7528C16.0781 11.8532 16.3262 12.0133 16.544 12.233C16.7637 12.4527 16.937 12.7443 17.0639 13.108C17.1927 13.4697 17.258 13.9138 17.2599 14.4403C17.2599 14.9347 17.2041 15.3759 17.0923 15.7642C16.9825 16.1506 16.8243 16.4792 16.6179 16.75C16.4115 17.0208 16.1624 17.2273 15.8707 17.3693C15.5791 17.5095 15.2533 17.5795 14.8935 17.5795C14.5052 17.5795 14.1624 17.5047 13.8651 17.3551C13.5677 17.2036 13.3281 16.9981 13.1463 16.7386C12.9664 16.4773 12.8575 16.1837 12.8196 15.858H14.0327C14.08 16.0701 14.1795 16.2348 14.331 16.3523C14.4825 16.4678 14.67 16.5256 14.8935 16.5256C15.2723 16.5256 15.5601 16.3608 15.7571 16.0312C15.9541 15.6998 16.0535 15.2462 16.0554 14.6705H16.0156C15.9285 14.8409 15.8111 14.9877 15.6634 15.1108C15.5156 15.232 15.3461 15.3258 15.1548 15.392C14.9654 15.4583 14.7637 15.4915 14.5497 15.4915C14.2069 15.4915 13.901 15.411 13.6321 15.25C13.3632 15.089 13.151 14.8674 12.9957 14.5852C12.8404 14.303 12.7628 13.9811 12.7628 13.6193C12.7609 13.2292 12.8509 12.8816 13.0327 12.5767C13.2145 12.2718 13.4683 12.0331 13.794 11.8608C14.1217 11.6866 14.5024 11.6004 14.9361 11.6023ZM14.9446 12.5682C14.7533 12.5682 14.5829 12.6136 14.4332 12.7045C14.2855 12.7955 14.1681 12.9176 14.081 13.071C13.9957 13.2244 13.9541 13.3958 13.956 13.5852C13.956 13.7765 13.9976 13.9489 14.081 14.1023C14.1662 14.2538 14.2817 14.375 14.4276 14.4659C14.5753 14.5549 14.7438 14.5994 14.9332 14.5994C15.0753 14.5994 15.2069 14.5729 15.3281 14.5199C15.4493 14.4669 15.5545 14.3939 15.6435 14.3011C15.7344 14.2064 15.8054 14.0975 15.8565 13.9744C15.9077 13.8513 15.9332 13.7206 15.9332 13.5824C15.9313 13.3987 15.8878 13.2301 15.8026 13.0767C15.7173 12.9233 15.5999 12.8002 15.4503 12.7074C15.3007 12.6146 15.1321 12.5682 14.9446 12.5682Z" fill="currentColor"></path></svg>
+      </button>
+    </div>
+    <ul class="options-list">
+      <li *ngFor="let option of filteredCodes" (click)="selectCode(option)">
+        {{ option.label }}
+      </li>
+    </ul>
+    <div class="d-flex justify-content-end">
+    <button class="close-btn " (click)="closeCodePopup()">Close</button>
+    </div>
+    
+  </div>
+</div>

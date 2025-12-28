@@ -1,0 +1,140 @@
+/* app.component.css */
+
+.wrapper {
+    padding: 2em ;
+    color: #212529;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .wrapper .container {
+    position: relative;
+    width: auto;
+    max-width: max-content;
+    height: 100%;
+    margin: 0 auto;
+    max-width: 800px;
+  }
+  
+  .cell-container {
+    max-width: 450px;
+    margin: 0 auto;
+  }
+/*   
+  .brand-img {
+    max-width: 100px;
+    margin: 0 auto;
+    padding-bottom: 10px;
+  } */
+  
+  .game-img {
+    max-width: 150px;
+    margin: 0 auto;
+  
+  }
+  
+  .game-img img {
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .btn-primary {
+    min-width: 200px;
+  }
+  
+.board {
+    display: grid;
+    grid-template-columns: repeat(4, 70px); /* Adjust based on your game */
+    gap: 10px;
+    border: 2px solid #333;
+  }
+  
+  
+  .tile-back {
+    background-color: #4caf50;
+    color: white;
+    transform: rotateY(180deg);
+  }
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    color: #000;
+    /* background-color: #f5f5f5; */
+    /* border-bottom: 1px solid #ddd; */
+  }
+  .puzzle-container {
+	 display: grid;
+	 grid-template-columns: repeat(3, 1fr);
+	 gap: 4px;
+	 max-width: 320px;
+	 margin: auto;
+}
+ .tile {
+	 width: 100%;
+	 padding-top: 100%;
+	 position: relative;
+	 border: 2px solid #1ABC9C;
+	 transition: transform 0.3s ease;
+	 background-repeat: no-repeat;
+	 background-position: center;
+	 background-size: cover;
+}
+ .tile:hover {
+	 cursor: pointer;
+	 opacity: 0.9;
+}
+ .tile.correct {
+	 pointer-events: none;
+	 animation: zoomIn 0.4s ease;
+	 transform: scale(1.2);
+	 border:0px solid #4caf50;
+}
+ .tile::after {
+	 content: '';
+	 position: absolute;
+	 top: 0;
+	 right: 0;
+	 bottom: 0;
+	 left: 0;
+}
+.tile.selected {
+	 transform: scale(1.08);
+	 z-index: 1;
+	 border: 2px solid #ff9800;
+	 box-shadow: 0 0 8px #ff9800;
+}
+ .tile.correct {
+	 pointer-events: none;
+	 animation: zoomIn 0.4s ease;
+	 transform: scale(1.05);
+	 border-color: #4caf50;
+}
+.ref
+{
+    max-width: 100px;
+}
+.ref img {
+    border-radius: 10px;
+    border: 2px solid #1ABC9C;
+}
+.btn-primary {
+  min-width: 200px;
+}
+.game-container {
+ display: flex;
+     justify-content: space-evenly;
+    align-items: baseline;
+    padding: 10px 20px;
+    color: #000;
+}
+ @keyframes zoomIn {
+	 0% {
+		 transform: scale(1);
+	}
+	 100% {
+		 transform: scale(1.05);
+	}
+}
+ 
