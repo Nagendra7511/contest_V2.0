@@ -557,10 +557,10 @@ async playContest(userId: string, contestId: string): Promise<boolean> {
   return contestsWithCounts;
 }
 
-  async getContestInstaId(userInstId: string) {
+  async getContestInstaId(insta_user_id: string) {
     const { data, error } = await this.supabase.from('insta_user_on_contest')
       .select(`id, insta_user, username, contest_id`)
-      .eq('id', userInstId)
+      .eq('id', insta_user_id)
       .single();
     if (error) {
       console.error('Error fetching contest by ID:', error);
@@ -571,9 +571,9 @@ async playContest(userId: string, contestId: string): Promise<boolean> {
 
 
 
-  async validateAndUpdateInstaUser(userInstId: string, profile?: any) {
+  async validateAndUpdateInstaUser(insta_user_id: string, profile?: any) {
   try {
-    const contestUser = await this.getContestInstaId(userInstId);
+    const contestUser = await this.getContestInstaId(insta_user_id);
 
     if (!contestUser || !contestUser.insta_user) {
       return { valid: false, instagram_url: null };

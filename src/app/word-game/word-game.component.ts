@@ -126,11 +126,11 @@ export class WordGameComponent implements OnInit, OnDestroy {
 
     // this.contestId = this.route.snapshot.paramMap.get('id');
     this.contestId = this.route.snapshot.queryParamMap.get('cid');
-    const userInstId = this.route.snapshot.queryParamMap.get('ig');
+    const insta_user_id = this.route.snapshot.queryParamMap.get('ig');
 
     // Store user_inst_ID in localStorage
-    if (userInstId) {
-      localStorage.setItem('user_inst_ID', userInstId);
+    if (insta_user_id) {
+      localStorage.setItem('user_inst_ID', insta_user_id);
     }
     
     if (!this.contestId) {
@@ -217,10 +217,10 @@ export class WordGameComponent implements OnInit, OnDestroy {
 
       if (contestData.insta_post) {
 
-        if (userInstId) {
+        if (insta_user_id) {
           if (!this.isLoggedIn) {
             // Before login → validate IG
-            const check = await this.supabaseService.validateAndUpdateInstaUser(userInstId);
+            const check = await this.supabaseService.validateAndUpdateInstaUser(insta_user_id);
             if (!check.valid) {
               this.showAccessMessage = true;
               this.insta_post_view = true; // invalid IG
@@ -234,7 +234,7 @@ export class WordGameComponent implements OnInit, OnDestroy {
 
             // After login → validate IG & update profile if empty
             const profile = await this.supabaseService.getProfile(this.userId!);
-            const check = await this.supabaseService.validateAndUpdateInstaUser(userInstId, profile);
+            const check = await this.supabaseService.validateAndUpdateInstaUser(insta_user_id, profile);
             if (!check.valid) {
               this.showAccessMessage = true;
               this.insta_post_view = true; // invalid IG

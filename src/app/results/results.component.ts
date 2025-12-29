@@ -123,12 +123,12 @@ export class ResultsComponent implements OnInit {
 
   const gameType = contest?.contest_type;
   const contestCid = contest?.contest_id || contest.id;   // <-- contest id
-  const userInstId = contest?.user_inst_id;               // <-- user_inst_ID
+  const insta_user_id = contest?.user_inst_id;               // <-- user_inst_ID
 
   if (gameType && contestCid) {
     const targetUrl = `/${gameType}`;
     this.router.navigate([targetUrl], {
-      queryParams: { cid: contestCid, id: userInstId }
+      queryParams: { cid: contestCid, id: insta_user_id }
     });
   } else {
     this.router.navigate(['/dashboard']);

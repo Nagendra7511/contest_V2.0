@@ -247,10 +247,10 @@ private loadGiftImages(timeout = 5000): Promise<void> {
     document.body.classList.add('plane-active');
 
     const contestId = this.route.snapshot.queryParamMap.get('cid');
-    const userInstId = this.route.snapshot.queryParamMap.get('ig');
+    const insta_user_id = this.route.snapshot.queryParamMap.get('ig');
 
-    if (userInstId) {
-      localStorage.setItem('user_inst_ID', userInstId);
+    if (insta_user_id) {
+      localStorage.setItem('user_inst_ID', insta_user_id);
     }
     if (!contestId) {
       this.router.navigate(['/dashboard']);
@@ -329,9 +329,9 @@ private loadGiftImages(timeout = 5000): Promise<void> {
       }
 
       if (contestData.insta_post) {
-        if (userInstId) {
+        if (insta_user_id) {
           if (!this.isLoggedIn) {
-            const check = await this.supabaseService.validateAndUpdateInstaUser(userInstId);
+            const check = await this.supabaseService.validateAndUpdateInstaUser(insta_user_id);
             if (!check.valid) {
               this.showAccessMessage = true;
               this.insta_post_view = true;
@@ -343,7 +343,7 @@ private loadGiftImages(timeout = 5000): Promise<void> {
             return;
           } else {
             const profile = await this.supabaseService.getProfile(this.userId!);
-            const check = await this.supabaseService.validateAndUpdateInstaUser(userInstId, profile);
+            const check = await this.supabaseService.validateAndUpdateInstaUser(insta_user_id, profile);
             if (!check.valid) {
               this.showAccessMessage = true;
               this.insta_post_view = true;

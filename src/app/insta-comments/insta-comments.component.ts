@@ -141,12 +141,12 @@ export class InstaCommentsComponent implements OnInit, OnDestroy {
     document.body.classList.add('insta-active');
 
     const contestId = this.route.snapshot.queryParamMap.get('cid');
-    const userInstId = this.route.snapshot.queryParamMap.get('ig');
-    // console.log('userInstId:', userInstId);
-    // alert(userInstId);
+    const insta_user_id = this.route.snapshot.queryParamMap.get('ig');
+    // console.log('insta_user_id:', insta_user_id);
+    // alert(insta_user_id);
     // Store user_inst_ID in localStorage
-    if (userInstId) {
-      localStorage.setItem('user_inst_ID', userInstId);
+    if (insta_user_id) {
+      localStorage.setItem('user_inst_ID', insta_user_id);
     }
     if (!contestId) {
       this.router.navigate(['/dashboard']);
@@ -236,10 +236,10 @@ export class InstaCommentsComponent implements OnInit, OnDestroy {
 
       if (contestData.insta_post) {
 
-        if (userInstId) {
+        if (insta_user_id) {
           if (!this.isLoggedIn) {
             // Before login → validate IG
-            const check = await this.supabaseService.validateAndUpdateInstaUser(userInstId);
+            const check = await this.supabaseService.validateAndUpdateInstaUser(insta_user_id);
             if (!check.valid) {
               this.showAccessMessage = true;
               this.insta_post_view = true; // invalid IG
@@ -253,7 +253,7 @@ export class InstaCommentsComponent implements OnInit, OnDestroy {
 
             // After login → validate IG & update profile if empty
             const profile = await this.supabaseService.getProfile(this.userId!);
-            const check = await this.supabaseService.validateAndUpdateInstaUser(userInstId, profile);
+            const check = await this.supabaseService.validateAndUpdateInstaUser(insta_user_id, profile);
             if (!check.valid) {
               this.showAccessMessage = true;
               this.insta_post_view = true; // invalid IG
