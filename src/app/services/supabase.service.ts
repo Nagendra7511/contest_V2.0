@@ -672,26 +672,140 @@ async updateInstaUsersTable(insta_user_ig: string, customerId: string) {
   return error;
 }
 
-// Check & Insert customer into customers_on_store only once
-async addCustomerToStore(customer_id: string, store_id: string) {
-  const { data: existing, error: selectError } = await this.supabase.from('customers_on_store')
-    .select('*')
-    .eq('customer_id', customer_id)
-    .eq('store_id', store_id)
-    .single();
+// Check & Insert customer/instgram users into customers_on_store table only once
+async addUserToStore(params: {
+  customerId?: string | null;
+  instaUserId?: string | null;
+  storeId: string;
+}) {
+  const { customerId, instaUserId, storeId } = params;
 
-  if (existing) {
-    return { inserted: false, message: "Already exists", data: existing };
+  if (!storeId || (!customerId && !instaUserId)) {
+    throw new Error('Missing storeId or user identifier');
   }
 
-  const { data, error } = await this.supabase.from('customers_on_store')
-    .insert([{ customer_id, store_id }])
-    .select()
-    .single();
-  if (error) throw error;
+  /* -------------------------------------------------
+     🔐 LOGGED-IN USER FLOW
+  ------------------------------------------------- */
+  if (customerId) {
 
-  return { inserted: true, message: "Inserted Successful", data };
+    // 1️⃣ insta_user_id + store_id → UPDATE customer_id
+    if (instaUserId) {
+      const { data: instaRow } = await this.supabase
+        .from('customers_on_store')
+        .select('*')
+        .eq('insta_user_id', instaUserId)
+        .eq('store_id', storeId)
+        .maybeSingle();
+
+      if (instaRow) {
+        const { data, error } = await this.supabase
+          .from('customers_on_store')
+          .update({ customer_id: customerId })
+          .eq('id', instaRow.id)
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        return {
+          action: 'updated_customer_id',
+          data
+        };
+      }
+    }
+
+    // 2️⃣ customer_id + store_id → UPDATE insta_user_id
+    const { data: customerRow } = await this.supabase
+      .from('customers_on_store')
+      .select('*')
+      .eq('customer_id', customerId)
+      .eq('store_id', storeId)
+      .maybeSingle();
+
+    if (customerRow) {
+      if (instaUserId) {
+        const { data, error } = await this.supabase
+          .from('customers_on_store')
+          .update({ insta_user_id: instaUserId })
+          .eq('id', customerRow.id)
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        return {
+          action: 'updated_insta_user_id',
+          data
+        };
+      }
+
+      return {
+        action: 'already_linked',
+        data: customerRow
+      };
+    }
+
+    // 3️⃣ INSERT
+    const { data, error } = await this.supabase
+      .from('customers_on_store')
+      .insert({
+        store_id: storeId,
+        customer_id: customerId,
+        insta_user_id: instaUserId ?? null
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return {
+      action: 'inserted_logged_in',
+      data
+    };
+  }
+
+  /* -------------------------------------------------
+     👤 NOT LOGGED-IN USER FLOW
+  ------------------------------------------------- */
+  if (instaUserId) {
+    // 4️⃣ insta_user_id + store_id → DO NOTHING
+    const { data: instaRow } = await this.supabase
+      .from('customers_on_store')
+      .select('*')
+      .eq('insta_user_id', instaUserId)
+      .eq('store_id', storeId)
+      .maybeSingle();
+
+    if (instaRow) {
+      return {
+        action: 'already_exists_non_logged_in',
+        data: instaRow
+      };
+    }
+
+    // 5️⃣ INSERT
+    const { data, error } = await this.supabase
+      .from('customers_on_store')
+      .insert({
+        store_id: storeId,
+        insta_user_id: instaUserId,
+        customer_id: null
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return {
+      action: 'inserted_non_logged_in',
+      data
+    };
+  }
+
+  throw new Error('Unhandled state');
 }
+
 
 async getStore(store_id: string) {
   const { data, error } = await this.supabase

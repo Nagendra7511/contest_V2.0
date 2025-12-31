@@ -707,7 +707,7 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
     }
 
     payload.instaUserId = instaData.insta_user;
-    console.log('Insta user ID found:', instaData.insta_user);
+    
   }
 
   // 🔐 Logged-in user
@@ -734,15 +734,42 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
 
 
   async customerCreateOnStore() {
-    if (this.userId && this.store_id) {
-      try {
-        const response = await this.supabaseService.addCustomerToStore(this.userId, this.store_id);
-        // console.log("Customer store link:", response);
-      } catch (err) {
-        console.error("Error writing customer_store", err);
-      }
+  if (!this.store_id) return;
+
+  const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
+  let instaUserId: string | null = null;
+
+  // 🔍 Fetch insta user if IG param exists
+  if (insta_user_ig) {
+    const instaData = await this.supabaseService.getContestInstaId(insta_user_ig);
+
+    if (!instaData) {
+      console.error('Invalid insta_user_ig');
+      return;
     }
+
+    instaUserId = instaData.insta_user; // ✅ actual insta user ID
   }
+
+  // 🚨 Safety check
+  if (!this.userId && !instaUserId) {
+    console.error('No valid user to link store');
+    return;
+  }
+
+  try {
+    const response = await this.supabaseService.addUserToStore({
+      customerId: this.userId ?? null,
+      instaUserId,
+      storeId: this.store_id
+    });
+
+    // console.log('Customer store link:', response);
+  } catch (err) {
+    console.error('Error writing customers_on_store', err);
+  }
+}
+
   goToBrandInfo() {
     const storeId = this.store_id;
    if (storeId) {
