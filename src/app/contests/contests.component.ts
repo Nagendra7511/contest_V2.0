@@ -211,18 +211,18 @@ export class ContestsComponent implements OnInit {
   
 
   // Play contest method
-  async handlePlay(contestId: string) {
-    if (!this.userId) {
-      console.error('User ID is missing! Cannot join contest.');
-      return;
-    }
-    const success = await this.supabaseService.playContest(this.userId, contestId);
-    if (success) {
-      this.contestsPublic = this.contestsPublic.filter(c => c.contest_id !== contestId);
-    } else {
-      // console.log('Failed to join the contest.');
-    }
-  }
+  // async handlePlay(contestId: string) {
+  //   if (!this.userId) {
+  //     console.error('User ID is missing! Cannot join contest.');
+  //     return;
+  //   }
+  //   const success = await this.supabaseService.playContest(this.userId, contestId);
+  //   if (success) {
+  //     this.contestsPublic = this.contestsPublic.filter(c => c.contest_id !== contestId);
+  //   } else {
+      
+  //   }
+  // }
 
   onPlayClick(contest: any) {
 

@@ -147,12 +147,12 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
     }
 
     const contestId = this.route.snapshot.queryParamMap.get('cid');
-    const insta_user_id = this.route.snapshot.queryParamMap.get('ig');
+    const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
 
     // Store user_inst_ID in localStorage
-    if (insta_user_id) {
-      localStorage.setItem('user_inst_ID', insta_user_id);
-    }
+    // if (insta_user_id) {
+    //   localStorage.setItem('user_inst_ID', insta_user_id);
+    // }
 
     if (!contestId) {
       throw new Error('Contest ID is null');
@@ -242,40 +242,41 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
 
       if (contestData.insta_post) {
 
-        if (insta_user_id) {
-          if (!this.isLoggedIn) {
-            // Before login → validate IG
-            const check = await this.supaBaseService.validateAndUpdateInstaUser(insta_user_id);
-            if (!check.valid) {
-              this.showAccessMessage = true;
-              this.insta_post_view = true; // invalid IG
-              this.loading = false;
-              return;
-            }
-            this.showLoginButton = true; // IG valid → show login button
-            this.loading = false;
-            return;
-          } else {
-
-            // After login → validate IG & update profile if empty
-            const profile = await this.supaBaseService.getProfile(this.userId!);
-            const check = await this.supaBaseService.validateAndUpdateInstaUser(insta_user_id, profile);
-            if (!check.valid) {
-              this.showAccessMessage = true;
-              this.insta_post_view = true; // invalid IG
-              this.loading = false;
-              return;
-            }
-          }
-        }
-        else {
-          // 🚨 No IG param at all → treat as invalid
+        if (!insta_user_ig) {
           this.showAccessMessage = true;
           this.insta_post_view = true;
           this.loading = false;
           return;
         }
+
+        const check = !this.isLoggedIn
+          ? await this.supaBaseService.validateAndUpdateInstaUser(insta_user_ig)
+          : await this.supaBaseService.validateAndUpdateInstaUser(
+            insta_user_ig,
+            await this.supaBaseService.getProfile(this.userId!)
+          );
+         
+        if (!check.valid) {
+          this.showAccessMessage = true;
+          this.insta_post_view = true;
+          this.loading = false;
+          return;
+        }
+
+        // ✅ CLEAR ALL BLOCKERS
+        this.showAccessMessage = false;
+        this.insta_post_view = false;
+        this.showLoginButton = false;
+
+        // ✅ SHOW GAME ENTRY
+        this.showWelcomeScreen = true;
+        this.showGamePanel = false;
+        this.showGameUpdate = false;
+
+        this.loading = false;
+        return;
       }
+
 
       // Check if contest is Loggedin or not
        if (!this.isLoggedIn) {
@@ -695,18 +696,62 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
   //   this.utilService.clearPlayState();
   // }
    async onGameFinished() {
-    if (!this.userId || !this.contest.contestId) {
-      console.error('Missing userId or contestId – cannot save participation.');
+
+  if (!this.contest.contestId) {
+    console.error('Missing contestId');
+    return;
+  }
+
+  const contestData = await this.supaBaseService.getContestById(this.contest.contestId);
+
+  // ✅ NULL GUARD (fixes TS error)
+  if (!contestData) {
+    console.error('Contest not found');
+    return;
+  }
+
+  const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
+  this.store_id = contestData.store_id; // ✅ now safe
+
+  const payload = {
+    contestId: this.contest.contestId,
+    storeId: this.store_id || '',
+    customerId: null as string | null,
+    instaUserId: null as string | null
+  };
+
+  // 🔍 Fetch insta user mapping if IG param exists
+  if (insta_user_ig) {
+    const instaData = await this.supaBaseService.getContestInstaId(insta_user_ig);
+
+    if (!instaData) {
+      console.error('Invalid insta_user_ig');
       return;
     }
-    const success = await this.supaBaseService.playContest(this.userId, this.contest.contestId);
-    if (success) {
-      // console.log('Contest participation saved!');
-    } else {
-      // console.error('Failed to update participation');
-    }
-    this.utilService.clearPlayState();
+
+    payload.instaUserId = instaData.insta_user;
   }
+
+  // 🔐 Logged-in user
+  if (this.userId) {
+    payload.customerId = this.userId;
+  }
+
+  // 🚨 Final safety check
+  if (!payload.customerId && !payload.instaUserId) {
+    console.error('No valid identifier to save participation');
+    return;
+  }
+
+  const success = await this.supaBaseService.playContest(payload);
+
+  if (!success) {
+    console.warn('Contest already played or failed');
+  }
+
+  this.utilService.clearPlayState();
+}
+
   async customerCreateOnStore() {
     if (this.userId && this.store_id) {
       try {

@@ -329,30 +329,65 @@ async getAllContest_assigned(userId: string) {
   // }
 
 // creating a new entry only if not exists - customer_on_contest_table
-async playContest(userId: string, contestId: string): Promise<boolean> {
-  const { data: existing } = await this.supabase
-    .from('customers_on_contest')
-    .select('customer_id')
-    .eq('customer_id', userId)
-    .eq('contest_id', contestId)
-    .maybeSingle();
+async playContest(params: {
+  contestId: string;
+  storeId: string;
+  customerId?: string | null;
+  instaUserId?: string | null;
+}): Promise<boolean> {
 
-  if (existing) {
-    // console.log("User has already played this contest.");
-    return false; // Already played
-  }
+  const { contestId,storeId, customerId, instaUserId } = params;
 
-  const { error } = await this.supabase
-    .from('customers_on_contest')
-    .insert({ customer_id: userId, contest_id: contestId });
-
-  if (error) {
-    console.error("Insert failed:", error);
+  if (!contestId || (!customerId && !instaUserId)) {
+    console.error('Missing identifiers');
     return false;
   }
 
-  return true; // New entry saved
+  // 🔍 Check existing participation
+  let query = this.supabase
+    .from('customers_on_contest')
+    .select('id')
+    .eq('contest_id', contestId);
+
+  if (customerId && instaUserId) {
+    // ✅ Logged-in user with IG → check BOTH
+    query = query.or(
+      `customer_id.eq.${customerId},insta_user_id.eq.${instaUserId}`
+    );
+  } else if (customerId) {
+    // ✅ Logged-in user (no IG)
+    query = query.eq('customer_id', customerId);
+  } else {
+    // ✅ Non-logged-in IG user
+    query = query.eq('insta_user_id', instaUserId!);
+  }
+
+  const { data: existing } = await query.maybeSingle();
+
+  if (existing) {
+    // 🚫 Already participated
+    return false;
+  }
+
+  // ➕ Insert new participation
+  const { error } = await this.supabase
+    .from('customers_on_contest')
+   .insert({
+      contest_id: contestId,
+      store_id: storeId,
+      customer_id: customerId ?? null,
+      insta_user_id: instaUserId ?? null
+    });
+
+  if (error) {
+    console.error('Insert failed:', error);
+    return false;
+  }
+
+  return true;
 }
+
+
 
  
 
@@ -557,10 +592,10 @@ async playContest(userId: string, contestId: string): Promise<boolean> {
   return contestsWithCounts;
 }
 
-  async getContestInstaId(insta_user_id: string) {
+  async getContestInstaId(insta_user_ig: string) {
     const { data, error } = await this.supabase.from('insta_user_on_contest')
       .select(`id, insta_user, username, contest_id`)
-      .eq('id', insta_user_id)
+      .eq('id', insta_user_ig)
       .single();
     if (error) {
       console.error('Error fetching contest by ID:', error);
@@ -571,9 +606,9 @@ async playContest(userId: string, contestId: string): Promise<boolean> {
 
 
 
-  async validateAndUpdateInstaUser(insta_user_id: string, profile?: any) {
+  async validateAndUpdateInstaUser(insta_user_ig: string, profile?: any) {
   try {
-    const contestUser = await this.getContestInstaId(insta_user_id);
+    const contestUser = await this.getContestInstaId(insta_user_ig);
 
     if (!contestUser || !contestUser.insta_user) {
       return { valid: false, instagram_url: null };
@@ -602,12 +637,12 @@ async playContest(userId: string, contestId: string): Promise<boolean> {
 
 
   // Update insta_users table (identified + customer_id)
-async updateInstaUsersTable(instaUserId: string, customerId: string) {
+async updateInstaUsersTable(insta_user_ig: string, customerId: string) {
   // Fetch existing insta_users row
   const { data, error: fetchError } = await this.supabase
     .from('insta_users')
     .select('customer_id, identified')
-    .eq('uuid', instaUserId)
+    .eq('uuid', insta_user_ig)
     .single();
 
   if (fetchError) {
@@ -628,7 +663,7 @@ async updateInstaUsersTable(instaUserId: string, customerId: string) {
       customer_id: customerId,
       identified: true
     })
-    .eq('uuid', instaUserId);
+    .eq('uuid', insta_user_ig);
 
   if (error) {
     console.error('Error updating insta_users table:', error);

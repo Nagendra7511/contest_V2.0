@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { SupabaseService } from './supabase.service';
 
 @Injectable({
@@ -11,24 +12,55 @@ export class UtilService {
   messageError: string = '';
   notificationMessage: string = '';
   loading: boolean = true;
+  private storeId: string | null = null;
+  private instaUserId: string | null = null;
 
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(private supabaseService: SupabaseService, private route: ActivatedRoute) {}
 
-  setPlayState(contestId: string, userId: string): void {
+  setPlayState(
+    contestId: string,
+    storeId: string,
+    userId?: string | null,
+    instaUserId?: string | null
+  ): void {
     this.currentContestId = contestId;
-    this.userId = userId;
+    this.storeId = storeId;
+    this.userId = userId ?? null;
+    this.instaUserId = instaUserId ?? null;
   }
 
-  async submitPlay(): Promise<boolean> {
-    if (this.userId && this.currentContestId) {
-      return await this.supabaseService.playContest(this.userId, this.currentContestId);
-    }
+  // async submitPlay(): Promise<boolean> {
+  //   if (this.userId && this.currentContestId) {
+  //     return await this.supabaseService.playContest(this.userId, this.currentContestId);
+  //   }
+  //   return false;
+  // }
+
+ async submitPlay(): Promise<boolean> {
+  if (!this.currentContestId || !this.storeId) {
+    console.error('Missing contestId or storeId');
     return false;
   }
 
+  if (!this.userId && !this.instaUserId) {
+    console.error('No valid identifier');
+    return false;
+  }
+
+  return await this.supabaseService.playContest({
+    contestId: this.currentContestId,
+    storeId: this.storeId,
+    customerId: this.userId,
+    instaUserId: this.instaUserId
+  });
+}
+
+
   clearPlayState(): void {
-    this.currentContestId = null;
-    this.userId = null;
+  this.currentContestId = null;
+  this.storeId = null;
+  this.userId = null;
+  this.instaUserId = null;
   }
 
   getRandomVoucher(offer: any): string {
