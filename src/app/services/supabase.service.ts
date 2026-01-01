@@ -537,22 +537,46 @@ async playContest(params: {
 
 
 
-  async getContestprobability(userId: string, contestId: string) {
-    const { data, error } = await this.supabase
-      .from('customer_contest_participation_view')
-      .select('probability_of_winning, contest_id, customer_id')
-      .eq('customer_id', userId)
-      .eq('contest_id', contestId)
-      .limit(1)  // optional, if only one expected
-  
-    if (error) {
-      console.error('Error fetching probability:', error);
-      return null;
-    }
-  
-    // console.log('Probability of winning:', data);
-    return data;
+  async getContestProbability(params: {
+  contestId: string;
+  customerId?: string | null;
+  instaUserId?: string | null;
+}) {
+  const { contestId, customerId, instaUserId } = params;
+
+  if (!contestId || (!customerId && !instaUserId)) {
+    return null;
   }
+
+  let query = this.supabase
+    .from('customer_contest_participation_view')
+    .select('probability_of_winning, contest_id, customer_id, insta_user_id')
+    .eq('contest_id', contestId)
+    .limit(1);
+
+  // ✅ OR logic when both identifiers exist
+  if (customerId && instaUserId) {
+    query = query.or(
+      `customer_id.eq.${customerId},insta_user_id.eq.${instaUserId}`
+    );
+  } 
+  else if (customerId) {
+    query = query.eq('customer_id', customerId);
+  } 
+  else {
+    query = query.eq('insta_user_id', instaUserId);
+  }
+
+  const { data, error } = await query.maybeSingle();
+
+  if (error) {
+    // console.error('Error fetching probability:', error);
+    return null;
+  }
+
+  return data;
+}
+
 
    async getBrandUser(userId: string) {
     const { data, error } = await this.supabase

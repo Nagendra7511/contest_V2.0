@@ -444,14 +444,17 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
 
     if (hasPlayed) {
       this.loadGameData();
+      return
     }
-     if (!this.userId || !this.contest?.contest_id) return;
-    const customerData = await this.supaBaseService.getContestprobability(this.userId, this.contest.contest_id);
-    // console.log('customerData:', customerData);
-    if (customerData?.length) {
-      this.contest.probability_of_winning = customerData[0].probability_of_winning || 1;
-      // console.log('probability_of_winning:', this.contest.probability_of_winning);
-    }
+     
+    const customerData = await this.supaBaseService.getContestProbability({
+      contestId: this.contest.contest_id,
+      customerId: this.userId ?? null,
+      instaUserId: this.instaUserId ?? null
+    });
+
+    this.contest.probability_of_winning = customerData?.probability_of_winning ?? 1;
+
     this.playMusic();
     this.showWelcomeScreen = false;
     this.showGamePanel = true;

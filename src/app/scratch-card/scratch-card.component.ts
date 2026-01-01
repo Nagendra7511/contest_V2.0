@@ -411,14 +411,13 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.playMusic();
-    if (!this.userId ) return;
-    const customerData = await this.supabaseService.getContestprobability(this.userId, this.contest.contest_id);
-    // console.log('prob:', customerData);
-    if (customerData?.length) {
-      // ✅ Only fallback if it's truly undefined or null
-      this.contest.probability_of_winning = customerData[0].probability_of_winning ?? 1;
-      // console.log('probability_of_winning:', this.contest.probability_of_winning);
-    }
+    const customerData = await this.supabaseService.getContestProbability({
+      contestId: this.contest.contest_id,
+      customerId: this.userId ?? null,
+      instaUserId: this.instaUserId ?? null
+    });
+
+    this.contest.probability_of_winning = customerData?.probability_of_winning ?? 1;
 
     this.showWelcomeScreen = false;
     this.showGamePanel = true;
