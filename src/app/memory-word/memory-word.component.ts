@@ -145,10 +145,35 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
     const contestId = this.route.snapshot.queryParamMap.get('cid');
     const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
 
-    // Store user_inst_ID in localStorage
+        // 🔍 Fetch insta user if IG param exists
     if (insta_user_ig) {
-      localStorage.setItem('user_inst_ID', insta_user_ig);
+      const instaData = await this.supabaseService.getContestInstaId(insta_user_ig);
+
+      if (!instaData) {
+        // console.error('Invalid insta_user_ig');
+        return;
+      }
+
+      this.instaUserId = instaData.insta_user; // ✅ actual insta user ID
     }
+
+    // 🔍 Fetch insta user if IG param exists
+    if (insta_user_ig) {
+      const instaData = await this.supabaseService.getContestInstaId(insta_user_ig);
+
+      if (!instaData) {
+        // console.error('Invalid insta_user_ig');
+        return;
+      }
+
+      this.instaUserId = instaData.insta_user; // ✅ actual insta user ID
+    }
+
+
+    // Store user_inst_ID in localStorage
+    // if (insta_user_ig) {
+    //   localStorage.setItem('user_inst_ID', insta_user_ig);
+    // }
     if (!contestId) {
       this.router.navigate(['/dashboard']);
       return;
@@ -215,8 +240,13 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
       const brandData = await this.supabaseService.getBrandStoreID(this.store_id!);
       this.brand = brandData || [];
       this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
-
-      const hasPlayed = await this.supabaseService.checkIfContestPlayed(this.userId, this.contest.contest_id);
+      console.log('Contest ID:', this.instaUserId);
+      const hasPlayed = await this.supabaseService.checkIfContestPlayed({
+        contestId: this.contest.contest_id,
+        customerId: this.userId ?? null,
+        instaUserId: this.instaUserId ?? null
+      });
+      console.log('Has played status:', hasPlayed);
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
       // console.log('Has played:', hasPlayed);
       if (hasPlayed) {
@@ -293,10 +323,7 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
         return;
       }
 
-      // if (!this.userId || !this.contest?.contest_id) return;
-
-      // const hasPlayed = await this.supabaseService.checkIfContestPlayed(this.userId, this.contest.contest_id);
-      // this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+    // this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
       if (hasPlayed) {
         // this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
         const data = await this.supabaseService.getUserResult(this.contest.contest_id, this.userId);
@@ -353,17 +380,20 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
   }
 
   async startGame(): Promise<void> {
-    const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
     ($('#infoModal') as any).modal('hide');
     document.body.classList.add('game-running');
     this.onGameFinished();
     this.customerCreateOnStore();
-    // if (!this.userId || !this.contest?.contest_id ) return;
+    if (!this.contest?.contest_id ) return;
 
-    // const hasPlayed = await this.supabaseService.checkIfContestPlayed(this.userId, this.contest.contest_id);
-    // if (hasPlayed) {
-    //   this.loadGameData();
-    // }
+         const hasPlayed = await this.supabaseService.checkIfContestPlayed({
+        contestId: this.contest.contest_id,
+        customerId: this.userId ?? null,
+         instaUserId: this.instaUserId ?? null
+      });
+    if (hasPlayed) {
+      this.loadGameData();
+    }
 
     this.playMusic();
     this.showWelcomeScreen = false;
@@ -693,7 +723,6 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
     return;
   }
 
-  const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
   this.store_id = contestData.store_id; // ✅ now safe
 
   const payload = {
@@ -703,18 +732,7 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
     instaUserId: null as string | null
   };
 
-  // 🔍 Fetch insta user mapping if IG param exists
-  if (insta_user_ig) {
-    const instaData = await this.supabaseService.getContestInstaId(insta_user_ig);
-    
-    if (!instaData) {
-      // console.error('Invalid insta_user_ig');
-      return;
-    }
-
-    payload.instaUserId = instaData.insta_user;
-    
-  }
+  payload.instaUserId = this.instaUserId;
 
   // 🔐 Logged-in user
   if (this.userId) {
@@ -742,21 +760,7 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
   async customerCreateOnStore() {
   if (!this.store_id) return;
 
-  const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
- 
-
-  // 🔍 Fetch insta user if IG param exists
-  if (insta_user_ig) {
-    const instaData = await this.supabaseService.getContestInstaId(insta_user_ig);
-
-    if (!instaData) {
-      // console.error('Invalid insta_user_ig');
-      return;
-    }
-
-    this.instaUserId = instaData.insta_user; // ✅ actual insta user ID
-  }
-
+  
   // 🚨 Safety check
   if (!this.userId && !this.instaUserId) {
     // console.error('No valid user to link store');

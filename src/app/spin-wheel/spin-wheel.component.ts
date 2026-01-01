@@ -150,6 +150,18 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
     const contestId = this.route.snapshot.queryParamMap.get('cid');
     const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
 
+        // 🔍 Fetch insta user if IG param exists
+    if (insta_user_ig) {
+      const instaData = await this.supaBaseService.getContestInstaId(insta_user_ig);
+
+      if (!instaData) {
+        // console.error('Invalid insta_user_ig');
+        return;
+      }
+
+      this.instaUserId = instaData.insta_user; // ✅ actual insta user ID
+    }
+
     // Store user_inst_ID in localStorage
     // if (insta_user_id) {
     //   localStorage.setItem('user_inst_ID', insta_user_id);
@@ -224,8 +236,11 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
       const brandData = await this.supaBaseService.getBrandStoreID(this.store_id!);
       this.brand = brandData || [];
       this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
-
-      const hasPlayed = await this.supaBaseService.checkIfContestPlayed(this.userId, this.contest.contest_id);
+      const hasPlayed = await this.supaBaseService.checkIfContestPlayed({
+        contestId: this.contest.contest_id,
+        customerId: this.userId ?? null,
+         instaUserId: this.instaUserId ?? null
+      });
       this.participationCount = await this.supaBaseService.getContestCount(this.contest.contest_id);
       // console.log('Has played:', hasPlayed);
       if (hasPlayed) {
@@ -312,7 +327,6 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
       //   return;
       // }
 
-      // const hasPlayed = await this.supaBaseService.checkIfContestPlayed(this.userId, this.contest.contest_id);
       // this.participationCount = await this.supaBaseService.getContestCount(this.contest.contest_id);
       // console.log('Has played:', hasPlayed);
       if (hasPlayed) {
@@ -412,16 +426,18 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
     document.body.classList.add('game-running');
     this.onGameFinished();
     this.customerCreateOnStore();
-    if (!this.userId || !this.contest?.contest_id) return;
+    if (!this.contest?.contest_id) return;
 
-    const hasPlayed = await this.supaBaseService.checkIfContestPlayed(
-      this.userId,
-      this.contest.contest_id
-    );
+    const hasPlayed = await this.supaBaseService.checkIfContestPlayed({
+        contestId: this.contest.contest_id,
+        customerId: this.userId ?? null,
+         instaUserId: this.instaUserId ?? null
+      });
 
     if (hasPlayed) {
       this.loadGameData();
     }
+     if (!this.userId || !this.contest?.contest_id) return;
     const customerData = await this.supaBaseService.getContestprobability(this.userId, this.contest.contest_id);
     // console.log('customerData:', customerData);
     if (customerData?.length) {
@@ -721,7 +737,6 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
     return;
   }
 
-  const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
   this.store_id = contestData.store_id; // ✅ now safe
 
   const payload = {
@@ -731,17 +746,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
     instaUserId: null as string | null
   };
 
-  // 🔍 Fetch insta user mapping if IG param exists
-  if (insta_user_ig) {
-    const instaData = await this.supaBaseService.getContestInstaId(insta_user_ig);
-
-    if (!instaData) {
-      // console.error('Invalid insta_user_ig');
-      return;
-    }
-
-    payload.instaUserId = instaData.insta_user;
-  }
+   payload.instaUserId = this.instaUserId;
 
   // 🔐 Logged-in user
   if (this.userId) {
@@ -767,21 +772,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
   async customerCreateOnStore() {
   if (!this.store_id) return;
 
-  const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
-  // let instaUserId: string | null = null;
-
-  // 🔍 Fetch insta user if IG param exists
-  if (insta_user_ig) {
-    const instaData = await this.supaBaseService.getContestInstaId(insta_user_ig);
-
-    if (!instaData) {
-      // console.error('Invalid insta_user_ig');
-      return;
-    }
-
-    this.instaUserId = instaData.insta_user; // ✅ actual insta user ID
-  }
-
+  
   // 🚨 Safety check
   if (!this.userId && !this.instaUserId) {
     // console.error('No valid user to link store');
@@ -791,7 +782,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
   try {
     const response = await this.supaBaseService.addUserToStore({
       customerId: this.userId ?? null,
-      instaUserId: this.instaUserId ?? null,
+      instaUserId: this.instaUserId,
       storeId: this.store_id
     });
 

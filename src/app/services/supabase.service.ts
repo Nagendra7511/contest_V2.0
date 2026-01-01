@@ -471,21 +471,46 @@ async playContest(params: {
   }
   
   
-  async checkIfContestPlayed(userId: string, contestId: string): Promise<boolean> {
-    const { data, error } = await this.supabase
-      .from('customer_contest_participation_view') 
-      .select('has_played')
-      .eq('customer_id', userId)
-      .eq('contest_id', contestId)
-      .maybeSingle();
-  
-    if (error) {
-      console.error('Error checking has_played status:', error);
-      return false;
-    }
-  
-    return data?.has_played === true;
+  async checkIfContestPlayed(params: {
+  customerId?: string | null;
+  instaUserId?: string | null;
+  contestId: string;
+}): Promise<boolean> {
+
+  const { customerId, instaUserId, contestId } = params;
+
+  if (!contestId || (!customerId && !instaUserId)) {
+    return false;
   }
+
+  let query = this.supabase
+    .from('customer_contest_participation_view')
+    .select('has_played')
+    .eq('contest_id', contestId)
+    .limit(1);
+
+  // ✅ CHECK BOTH IDENTIFIERS
+  if (customerId && instaUserId) {
+    query = query.or(
+      `customer_id.eq.${customerId},insta_user_id.eq.${instaUserId}`
+    );
+  } else if (customerId) {
+    query = query.eq('customer_id', customerId);
+  } else {
+    query = query.eq('insta_user_id', instaUserId);
+  }
+
+  const { data, error } = await query.maybeSingle();
+
+  if (error) {
+    console.error('Error checking has_played status:', error);
+    return false;
+  }
+
+  return data?.has_played === true;
+}
+
+
 
   async getContestprobability(userId: string, contestId: string) {
     const { data, error } = await this.supabase
