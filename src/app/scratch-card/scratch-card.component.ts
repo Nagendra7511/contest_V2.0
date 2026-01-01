@@ -65,6 +65,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
   gameMusic!: HTMLAudioElement;
   isMusicPlaying = false;
   profile: any = null;
+  instaUserId: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -619,26 +620,28 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
   // }
 
   private sendResultToApi(offer: any, voucher: string, contestId: string, isWinner: boolean): void {
-    if (!this.userId || !contestId) return;
+   if (!this.contest.contestId) {
+    // // console.error('Missing contestId. Aborting API call.');
+    return;
+  }
 
-    const key = `resultSent_${this.userId}_${contestId}`;
-    if (localStorage.getItem(key)) return;
+  // ✅ At least one identifier must exist
+  if (!this.userId && !this.instaUserId) {
+    // // console.error('No valid user identifier (customer or insta)');
+    return;
+  }
 
-    localStorage.setItem(key, 'true');
     const isValidVoucher = isWinner && voucher?.trim() !== '';
-    const result: any = {
-      customer_id: this.userId,
-      contest_id: contestId,
-      is_winner: isWinner,
-      voucher_assigned: isValidVoucher ? `${offer.name} : ${voucher}` : `Better Luck`,
+    const result = {
+    contest_id: contestId,
+    // ✅ send ONLY ONE identifier
+    customer_id: this.userId ?? null,
+    insta_user_id: this.instaUserId ?? null,
+    is_winner: isWinner,
+    score: null,
+    voucher_assigned: isValidVoucher ? `${offer.name} : ${voucher}` : `Better Luck`,
       expiry_date: isWinner ? offer.expiryDate : null,
     };
-
-
-    // if (isWinner && offer) {
-    //   result.voucher_assigned = voucher;
-    //   result.expiry_date = offer.expiryDate;
-    // }
 
     this.supabaseService.updateContestResults(result).then(async () => {
       if (isWinner && offer) {
@@ -657,8 +660,8 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
     }).catch(err => {
-      console.error('Error saving result:', err);
-      localStorage.removeItem(key);
+      // console.error('Error saving result:', err);
+      // localStorage.removeItem(key);
     });
   }
 
@@ -695,7 +698,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // ✅ NULL GUARD (fixes TS error)
   if (!contestData) {
-    console.error('Contest not found');
+    // console.error('Contest not found');
     return;
   }
 
@@ -714,7 +717,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
     const instaData = await this.supabaseService.getContestInstaId(insta_user_ig);
 
     if (!instaData) {
-      console.error('Invalid insta_user_ig');
+      // console.error('Invalid insta_user_ig');
       return;
     }
 
@@ -728,7 +731,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // 🚨 Final safety check
   if (!payload.customerId && !payload.instaUserId) {
-    console.error('No valid identifier to save participation');
+    // console.error('No valid identifier to save participation');
     return;
   }
 
@@ -746,36 +749,36 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
   if (!this.store_id) return;
 
   const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
-  let instaUserId: string | null = null;
+  // let instaUserId: string | null = null;
 
   // 🔍 Fetch insta user if IG param exists
   if (insta_user_ig) {
     const instaData = await this.supabaseService.getContestInstaId(insta_user_ig);
 
     if (!instaData) {
-      console.error('Invalid insta_user_ig');
+      // console.error('Invalid insta_user_ig');
       return;
     }
 
-    instaUserId = instaData.insta_user; // ✅ actual insta user ID
+    this.instaUserId = instaData.insta_user; // ✅ actual insta user ID
   }
 
   // 🚨 Safety check
-  if (!this.userId && !instaUserId) {
-    console.error('No valid user to link store');
+  if (!this.userId && !this.instaUserId) {
+    // console.error('No valid user to link store');
     return;
   }
 
   try {
     const response = await this.supabaseService.addUserToStore({
       customerId: this.userId ?? null,
-      instaUserId,
+      instaUserId: this.instaUserId ?? null,
       storeId: this.store_id
     });
 
     // console.log('Customer store link:', response);
   } catch (err) {
-    console.error('Error writing customers_on_store', err);
+    // console.error('Error writing customers_on_store', err);
   }
 }
   goToBrandInfo() {

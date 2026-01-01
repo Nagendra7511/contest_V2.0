@@ -57,6 +57,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
   gameMusic!: HTMLAudioElement;
   isMusicPlaying = false;
   profile: any = null;
+  instaUserId: string | null = null;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -629,17 +630,27 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
 
   async sendResultToApi(prize: any, voucher: string, isWinner: boolean, contestId: string): Promise<void> {
     const userId = localStorage.getItem('userId');
-    // const resultKey = `resultSent_${userId}_${contestId}`;
-    // if (!userId || !contestId || localStorage.getItem(resultKey)) return;
+      if (!this.contest.contestId) {
+    // // console.error('Missing contestId. Aborting API call.');
+    return;
+  }
 
-    // localStorage.setItem(resultKey, 'true');
+  // ✅ At least one identifier must exist
+  if (!this.userId && !this.instaUserId) {
+    // // console.error('No valid user identifier (customer or insta)');
+    return;
+  }
+
     const isValidVoucher = isWinner && voucher?.trim() !== '';
     const result = {
-      customer_id: userId,
-      contest_id: contestId,
-      is_winner: isWinner,
-      voucher_assigned: isValidVoucher ? `${prize.name} : ${voucher}` : `Better Luck`,
-      expiry_date: isWinner ? prize.expiryDate : null,
+    contest_id: contestId,
+    // ✅ send ONLY ONE identifier
+    customer_id: this.userId ?? null,
+    insta_user_id: this.instaUserId ?? null,
+    is_winner: isWinner,
+    score: null,
+    voucher_assigned: isValidVoucher ? `${prize.name} : ${voucher}` : `Better Luck`,
+    expiry_date: isWinner ? prize.expiryDate : null,
     };
 
     // console.log('Sending result to API:', result);
@@ -706,7 +717,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
 
   // ✅ NULL GUARD (fixes TS error)
   if (!contestData) {
-    console.error('Contest not found');
+    // console.error('Contest not found');
     return;
   }
 
@@ -725,7 +736,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
     const instaData = await this.supaBaseService.getContestInstaId(insta_user_ig);
 
     if (!instaData) {
-      console.error('Invalid insta_user_ig');
+      // console.error('Invalid insta_user_ig');
       return;
     }
 
@@ -739,7 +750,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
 
   // 🚨 Final safety check
   if (!payload.customerId && !payload.instaUserId) {
-    console.error('No valid identifier to save participation');
+    // console.error('No valid identifier to save participation');
     return;
   }
 
@@ -757,36 +768,36 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
   if (!this.store_id) return;
 
   const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
-  let instaUserId: string | null = null;
+  // let instaUserId: string | null = null;
 
   // 🔍 Fetch insta user if IG param exists
   if (insta_user_ig) {
     const instaData = await this.supaBaseService.getContestInstaId(insta_user_ig);
 
     if (!instaData) {
-      console.error('Invalid insta_user_ig');
+      // console.error('Invalid insta_user_ig');
       return;
     }
 
-    instaUserId = instaData.insta_user; // ✅ actual insta user ID
+    this.instaUserId = instaData.insta_user; // ✅ actual insta user ID
   }
 
   // 🚨 Safety check
-  if (!this.userId && !instaUserId) {
-    console.error('No valid user to link store');
+  if (!this.userId && !this.instaUserId) {
+    // console.error('No valid user to link store');
     return;
   }
 
   try {
     const response = await this.supaBaseService.addUserToStore({
       customerId: this.userId ?? null,
-      instaUserId,
+      instaUserId: this.instaUserId ?? null,
       storeId: this.store_id
     });
 
     // console.log('Customer store link:', response);
   } catch (err) {
-    console.error('Error writing customers_on_store', err);
+    // console.error('Error writing customers_on_store', err);
   }
 }
 
