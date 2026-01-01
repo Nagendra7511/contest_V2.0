@@ -320,38 +320,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
       }
       this.prepareWheel();
 
-      // this.userId = localStorage.getItem('userId')!;
-      // this.isLoggedIn = !!this.userId;
-
-      // Always show contest name (even before login)
-      // if (!this.isLoggedIn) {
-      //   localStorage.setItem('redirectUrl', this.router.url);
-      //   this.showLoginButton = true;
-      //   this.loading = false;
-      //   return;
-      // }
-
-      // this.participationCount = await this.supaBaseService.getContestCount(this.contest.contest_id);
-      // console.log('Has played:', hasPlayed);
-      if (hasPlayed) {
-        // this.participationCount = await this.supaBaseService.getContestCount(this.contest.contest_id);
-
-        const data = await this.supaBaseService.getUserResult({
-          contestId: this.contest.contest_id,
-          customerId: this.userId ?? null,
-          instaUserId: this.instaUserId ?? null
-        });
-        this.gameResult = data;
-        // console.log('User ID:', this.userId);
-        // console.log('Contest ID', this.contest.contest_id);
-        // console.log('Contest results:', data);
-        // console.log('Participation count:', this.participationCount);
-        this.showWelcomeScreen = false;
-        this.showGamePanel = false;
-        this.showGameResult = true;
-        this.loading = false;
-        return;
-      }
+      
 
       if (!this.contest.is_private) {
         this.showWelcomeScreen = true;

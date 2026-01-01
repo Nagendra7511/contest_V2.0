@@ -318,20 +318,6 @@ export class PriceMatchComponent implements OnInit, OnDestroy {
       this.products = (gameConfig.products as Product[]) ?? [];
       if (!this.products.length) throw new Error('No products found in contest config');
 
-      // this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
-      if (hasPlayed) {
-        const data = await this.supabaseService.getUserResult({
-          contestId: this.contest.contest_id,
-          customerId: this.userId ?? null,
-          instaUserId: this.instaUserId ?? null
-        });
-        this.gameResult = data;
-        this.showWelcomeScreen = false;
-        this.showGamePanel = false;
-        this.showGameResult = true;
-        this.loading = false;
-        return;
-      }
 
       if (!this.contest.is_private) {
         this.showWelcomeScreen = true;
