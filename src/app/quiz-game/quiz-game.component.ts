@@ -240,7 +240,11 @@ export class QuizGameComponent implements OnInit, OnDestroy {
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
 
       if (hasPlayed) {
-        const data = await this.supabaseService.getUserResult(this.contest.contest_id, this.userId);
+        const data = await this.supabaseService.getUserResult({
+          contestId: this.contest.contest_id,
+          customerId: this.userId ?? null,
+          instaUserId: this.instaUserId ?? null
+        });
         this.gameResult = data;
         this.showWelcomeScreen = false;
         this.showGamePanel = false;
@@ -319,7 +323,11 @@ export class QuizGameComponent implements OnInit, OnDestroy {
       if (!this.questions.length) throw new Error('No questions found in contest config');
 
       if (hasPlayed) {
-        const data = await this.supabaseService.getUserResult(this.contest.contest_id, this.userId);
+        const data = await this.supabaseService.getUserResult({
+          contestId: this.contest.contest_id,
+          customerId: this.userId ?? null,
+          instaUserId: this.instaUserId ?? null
+        });
         this.gameResult = data;
         this.showWelcomeScreen = false;
         this.showGamePanel = false;

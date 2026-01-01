@@ -240,19 +240,23 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
       const brandData = await this.supabaseService.getBrandStoreID(this.store_id!);
       this.brand = brandData || [];
       this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
-      console.log('Contest ID:', this.instaUserId);
+      // console.log('Contest ID:', this.instaUserId);
       const hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
         instaUserId: this.instaUserId ?? null
       });
-      console.log('Has played status:', hasPlayed);
+      // console.log('Has played status:', hasPlayed);
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
       // console.log('Has played:', hasPlayed);
       if (hasPlayed) {
       //  this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
 
-        const data = await this.supabaseService.getUserResult(this.contest.contest_id, this.userId);
+        const data = await this.supabaseService.getUserResult({
+          contestId: this.contest.contest_id,
+          customerId: this.userId ?? null,
+          instaUserId: this.instaUserId ?? null
+        });
         this.gameResult = data;
         this.showWelcomeScreen = false;
         this.showGamePanel = false;
@@ -326,7 +330,11 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
     // this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
       if (hasPlayed) {
         // this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
-        const data = await this.supabaseService.getUserResult(this.contest.contest_id, this.userId);
+        const data = await this.supabaseService.getUserResult({
+          contestId: this.contest.contest_id,
+          customerId: this.userId ?? null,
+          instaUserId: this.instaUserId ?? null
+        });
         this.gameResult = data;
         this.showWelcomeScreen = false;
         this.showGamePanel = false;

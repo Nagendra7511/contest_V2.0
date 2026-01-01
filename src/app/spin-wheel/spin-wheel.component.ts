@@ -246,7 +246,11 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
       if (hasPlayed) {
       //  this.participationCount = await this.supaBaseService.getContestCount(this.contest.contest_id);
 
-        const data = await this.supaBaseService.getUserResult(this.contest.contest_id, this.userId);
+        const data = await this.supaBaseService.getUserResult({
+          contestId: this.contest.contest_id,
+          customerId: this.userId ?? null,
+          instaUserId: this.instaUserId ?? null
+        });
         this.gameResult = data;
         this.showWelcomeScreen = false;
         this.showGamePanel = false;
@@ -332,7 +336,11 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
       if (hasPlayed) {
         // this.participationCount = await this.supaBaseService.getContestCount(this.contest.contest_id);
 
-        const data = await this.supaBaseService.getUserResult(this.contest.contest_id, this.userId);
+        const data = await this.supaBaseService.getUserResult({
+          contestId: this.contest.contest_id,
+          customerId: this.userId ?? null,
+          instaUserId: this.instaUserId ?? null
+        });
         this.gameResult = data;
         // console.log('User ID:', this.userId);
         // console.log('Contest ID', this.contest.contest_id);

@@ -250,7 +250,11 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
       if (hasPlayed) {
       //  this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
 
-        const data = await this.supabaseService.getUserResult(this.contest.contest_id, this.userId);
+        const data = await this.supabaseService.getUserResult({
+          contestId: this.contest.contest_id,
+          customerId: this.userId ?? null,
+          instaUserId: this.instaUserId ?? null
+        });
         this.gameResult = data;
         this.showWelcomeScreen = false;
         this.showGamePanel = false;
@@ -335,7 +339,11 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
       if (hasPlayed) {
         // this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
 
-        const data = await this.supabaseService.getUserResult(this.contest.contest_id, this.userId);
+        const data = await this.supabaseService.getUserResult({
+          contestId: this.contest.contest_id,
+          customerId: this.userId ?? null,
+          instaUserId: this.instaUserId ?? null
+        });
         this.gameResult = data;
         // console.log('User ID:', this.userId);
         // console.log('Contest ID', this.contest.contest_id);

@@ -233,7 +233,11 @@ export class PuzzleComponent implements OnInit, OnDestroy {
       if (hasPlayed) {
       //  this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
 
-        const data = await this.supabaseService.getUserResult(this.contest.contest_id, this.userId);
+        const data = await this.supabaseService.getUserResult({
+          contestId: this.contest.contest_id,
+          customerId: this.userId ?? null,
+          instaUserId: this.instaUserId ?? null
+        });
         this.gameResult = data;
         this.showWelcomeScreen = false;
         this.showGamePanel = false;
@@ -310,7 +314,11 @@ export class PuzzleComponent implements OnInit, OnDestroy {
       if (hasPlayed) {
         // this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
 
-        const data = await this.supabaseService.getUserResult(this.contest.contest_id, this.userId);
+        const data = await this.supabaseService.getUserResult({
+  contestId: this.contest.contest_id,
+  customerId: this.userId ?? null,
+  instaUserId: this.instaUserId ?? null
+});
         this.gameResult = data;
         this.showWelcomeScreen = false;
         this.showGamePanel = false;

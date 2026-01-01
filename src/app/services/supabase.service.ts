@@ -269,21 +269,46 @@ async getAllContest_assigned(userId: string) {
   return count;
   }
 
-  async getUserResult(contestId: string, userId: string) {
-    const { data, error } = await this.supabase
-      .from('contest_results')
-      .select("*")
-      .eq('contest_id', contestId)
-      .eq('customer_id', userId)
-      .maybeSingle()
-  
-    if (error) {
-      console.error('Error fetching user result:', error);
+  async getUserResult(params: {
+    contestId: string;
+    customerId?: string | null;
+    instaUserId?: string | null;
+  }) {
+    const { contestId, customerId, instaUserId } = params;
+
+    if (!contestId || (!customerId && !instaUserId)) {
       return null;
     }
-  
+
+    let query = this.supabase
+      .from('contest_results')
+      .select('*')
+      .eq('contest_id', contestId)
+      .limit(1);
+
+    // ✅ OR logic when both are present
+    if (customerId && instaUserId) {
+      query = query.or(
+        `customer_id.eq.${customerId},insta_user_id.eq.${instaUserId}`
+      );
+    }
+    else if (customerId) {
+      query = query.eq('customer_id', customerId);
+    }
+    else {
+      query = query.eq('insta_user_id', instaUserId);
+    }
+
+    const { data, error } = await query.maybeSingle();
+
+    if (error) {
+      // console.error('Error fetching user result:', error);
+      return null;
+    }
+
     return data;
   }
+
   
   async updateContests(updatedResults: any) {
     const { error } = await this.supabase
