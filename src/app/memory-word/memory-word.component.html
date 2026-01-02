@@ -371,6 +371,7 @@
     <div class="col-12 text-center">
       <a  data-toggle="modal" data-target="#terms" class="game-terms">Terms & Conditions</a>
     </div>
+   
     <div class="social_box mt-2">
       <a *ngIf="contest?.stores?.links?.social_links?.Instagram"
         href="{{contest?.stores?.links?.social_links.Instagram}}" target="_blank">
@@ -406,6 +407,9 @@
         <img src="images/tiktok.png" alt="tiktok">
       </a>
     </div>
+    <div *ngIf="insta_flow_LoginButton" class="text-center col-12">
+        <button class="btn btn-primary text-center mt-3" (click)="openModal()">Login</button>
+      </div>
     <div class="text-center col-12"><button class="btn btn-primary btn-sm text-center mt-3"  (click)="goToBrandInfo()">Brand Info</button></div>
 
   </div>
@@ -458,6 +462,7 @@
     <div class="col-12 text-center">
       <a  data-toggle="modal" data-target="#terms" class="game-terms">Terms & Conditions</a>
     </div>
+   
     <div class="social_box mt-2">
       <a *ngIf="contest?.stores?.links?.social_links?.Instagram"
         href="{{contest?.stores?.links?.social_links.Instagram}}" target="_blank">
@@ -493,6 +498,9 @@
         <img src="images/tiktok.png" alt="tiktok">
       </a>
     </div>
+     <div *ngIf="insta_flow_LoginButton" class="text-center col-12">
+        <button class="btn btn-primary text-center mt-3" (click)="openModal()">Login</button>
+      </div>
     <div class="text-center col-12"><button class="btn btn-primary btn-sm text-center mt-3"  (click)="goToBrandInfo()">Brand Info</button></div>
 
   </div>

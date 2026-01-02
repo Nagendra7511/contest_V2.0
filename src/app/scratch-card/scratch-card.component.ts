@@ -66,6 +66,8 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
   isMusicPlaying = false;
   profile: any = null;
   instaUserId: string | null = null;
+  insta_flow_LoginButton = false;
+  hasPlayed = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -127,6 +129,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
             const updatedProfile = await this.supabaseService.getProfile(this.userId!);
             const isComplete = !!updatedProfile?.first_name?.trim();
             this.authserivice.setProfileComplete(isComplete);
+            this.insta_flow_LoginButton = false;
           })();
         }, 500);
       } else {
@@ -144,6 +147,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
           const updatedProfile = await this.supabaseService.getProfile(this.userId!);
           const isComplete = !!updatedProfile?.first_name?.trim();
           this.authserivice.setProfileComplete(isComplete);
+            this.insta_flow_LoginButton = false;
         })();
       }, 500);
     }
@@ -240,14 +244,14 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
       const brandData = await this.supabaseService.getBrandStoreID(this.store_id!);
       this.brand = brandData || [];
       this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
-      const hasPlayed = await this.supabaseService.checkIfContestPlayed({
+      this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
          instaUserId: this.instaUserId ?? null
       });
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
       // console.log('Has played:', hasPlayed);
-      if (hasPlayed) {
+      if (this.hasPlayed) {
       //  this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
 
         const data = await this.supabaseService.getUserResult({
@@ -369,13 +373,13 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.onGameFinished();
     this.customerCreateOnStore();
     if (!this.contest?.contest_id) return;
-     const hasPlayed = await this.supabaseService.checkIfContestPlayed({
+     this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
          instaUserId: this.instaUserId ?? null
       });
 
-    if (hasPlayed) {
+    if (this.hasPlayed) {
       this.loadGameData();
     }
 

@@ -80,6 +80,8 @@ export class BrandCatchGameComponent implements OnInit, OnDestroy {
   isMusicPlaying = false;
   profile: any = null;
   instaUserId: string | null = null;
+insta_flow_LoginButton = false;
+hasPlayed = false;
 
   // brandImages = [
   //   'https://i.postimg.cc/FFccrS7R/flappy.png',
@@ -139,7 +141,10 @@ export class BrandCatchGameComponent implements OnInit, OnDestroy {
       const updatedProfile = await this.supabaseService.getProfile(this.userId!);
       const isComplete = !!updatedProfile?.first_name?.trim();
       this.authserivice.setProfileComplete(isComplete);
-      ($('#infoModal') as any).modal('show');
+            this.insta_flow_LoginButton = false;
+            if (!this.hasPlayed) {
+              ($('#infoModal') as any).modal('show');
+            }
     }
   }
 
@@ -227,7 +232,7 @@ export class BrandCatchGameComponent implements OnInit, OnDestroy {
       this.brand = brandData || [];
       this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
 
-      const hasPlayed = await this.supabaseService.checkIfContestPlayed({
+      this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
          instaUserId: this.instaUserId ?? null
@@ -235,7 +240,7 @@ export class BrandCatchGameComponent implements OnInit, OnDestroy {
 
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
 
-      if (hasPlayed) {
+      if (this.hasPlayed) {
         const data = await this.supabaseService.getUserResult({
           contestId: this.contest.contest_id,
           customerId: this.userId ?? null,
@@ -347,13 +352,13 @@ export class BrandCatchGameComponent implements OnInit, OnDestroy {
     // this.onGameFinished();
     // this.customerCreateOnStore();
     if (!this.contest?.contest_id) return;
-     const hasPlayed = await this.supabaseService.checkIfContestPlayed({
+     this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
          instaUserId: this.instaUserId ?? null
       });
 
-    if (hasPlayed) {
+    if (this.hasPlayed) {
       this.loadGameData();
       return;
     }
