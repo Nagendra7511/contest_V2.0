@@ -10,6 +10,7 @@ import { AuthService } from '../services/auth.service';
 import { ConfittiComponent } from '../confitti/confitti.component';
 import { Location } from '@angular/common';
 import { LocationService } from '../services/location.service';
+import { profile } from 'console';
 
 interface Tile {
   id: number;
@@ -66,7 +67,7 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
   contest_Expired = false;
   showContesExpired = false;
   insta_post_view = false;
-
+  abc : any
   userId: string | null = null;
   instaUserId: string | null = null;
   isLoggedIn = false;
@@ -151,7 +152,7 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
 
     const contestId = this.route.snapshot.queryParamMap.get('cid');
     const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
-
+    
         // 🔍 Fetch insta user if IG param exists
     if (insta_user_ig) {
       const instaData = await this.supabaseService.getContestInstaId(insta_user_ig);
@@ -163,19 +164,6 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
 
       this.instaUserId = instaData.insta_user; // ✅ actual insta user ID
     }
-
-    // 🔍 Fetch insta user if IG param exists
-    if (insta_user_ig) {
-      const instaData = await this.supabaseService.getContestInstaId(insta_user_ig);
-
-      if (!instaData) {
-        // console.error('Invalid insta_user_ig');
-        return;
-      }
-
-      this.instaUserId = instaData.insta_user; // ✅ actual insta user ID
-    }
-
 
     // Store user_inst_ID in localStorage
     // if (insta_user_ig) {
@@ -189,6 +177,7 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
 
     try {
       this.userId = this.authserivice.getUserId();
+      console.log('User ID:', this.userId);
       const brandUser = await this.supabaseService.getBrandUser(this.userId!); 
 
       const contestData = await this.supabaseService.getContestById(contestId);
@@ -274,7 +263,12 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
           this.loading = false;
           return
         }
-        
+        const check = !this.isLoggedIn
+          ? await this.supabaseService.validateAndUpdateInstaUser(insta_user_ig!)
+          : await this.supabaseService.validateAndUpdateInstaUser(insta_user_ig!,
+            await this.supabaseService.getProfile(this.userId!)
+          );
+          
         this.loading = false;
         return;
       }
@@ -292,8 +286,7 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
 
         const check = !this.isLoggedIn
           ? await this.supabaseService.validateAndUpdateInstaUser(insta_user_ig)
-          : await this.supabaseService.validateAndUpdateInstaUser(
-            insta_user_ig,
+          : await this.supabaseService.validateAndUpdateInstaUser(insta_user_ig,
             await this.supabaseService.getProfile(this.userId!)
           );
          

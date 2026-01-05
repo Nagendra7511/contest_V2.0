@@ -250,6 +250,17 @@ export class PriceMatchComponent implements OnInit, OnDestroy {
         this.showWelcomeScreen = false;
         this.showGamePanel = false;
         this.showGameResult = true;
+        if (!this.isLoggedIn) {
+          this.insta_flow_LoginButton = true;
+          this.loading = false;
+          return
+        }
+        const check = !this.isLoggedIn
+          ? await this.supabaseService.validateAndUpdateInstaUser(insta_user_ig!)
+          : await this.supabaseService.validateAndUpdateInstaUser(insta_user_ig!,
+            await this.supabaseService.getProfile(this.userId!)
+          );
+          
         this.loading = false;
         return;
       }

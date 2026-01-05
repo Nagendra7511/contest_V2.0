@@ -763,12 +763,12 @@ async playContest(params: {
 
 
   // Update insta_users table (identified + customer_id)
-async updateInstaUsersTable(insta_user_ig: string, customerId: string) {
+async updateInstaUsersTable(insta_userID: string, customerId: string) {
   // Fetch existing insta_users row
   const { data, error: fetchError } = await this.supabase
     .from('insta_users')
     .select('customer_id, identified')
-    .eq('uuid', insta_user_ig)
+    .eq('uuid', insta_userID)
     .single();
 
   if (fetchError) {
@@ -789,7 +789,7 @@ async updateInstaUsersTable(insta_user_ig: string, customerId: string) {
       customer_id: customerId,
       identified: true
     })
-    .eq('uuid', insta_user_ig);
+    .eq('uuid', insta_userID);
 
   if (error) {
     console.error('Error updating insta_users table:', error);
