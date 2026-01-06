@@ -96,8 +96,8 @@ async getContestsPrivate(userId: string) {
 }
 
 
-async getContestsHistory(userId: string) {
-  const { data, error } = await this.supabase
+async getContestsHistory(userId: string, instaUserId?: string) {
+  let query = this.supabase
     .from('customer_contest_participation_view')
     .select(`
       *,
@@ -106,24 +106,36 @@ async getContestsHistory(userId: string) {
         logo
       )
     `)
-    .eq('customer_id', userId)
     .order('start_date', { ascending: false });
+
+  // 🔹 Apply OR condition
+  if (userId && instaUserId) {
+    query = query.or(
+      `customer_id.eq.${userId},insta_user_id.eq.${instaUserId}`
+    );
+  } else if (userId) {
+    query = query.eq('customer_id', userId);
+  } else if (instaUserId) {
+    query = query.eq('insta_user_id', instaUserId);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error('Error fetching data:', error);
     return [];
   }
 
+  // 🔁 Remove duplicate contests (same contest_id)
   const uniqueContests = data.filter(
     (value, index, self) =>
-      index === self.findIndex((item) => item.contest_id === value.contest_id)
+      index === self.findIndex(
+        (item) => item.contest_id === value.contest_id
+      )
   );
 
   return uniqueContests;
-  
 }
-
-
 
 
 
@@ -947,7 +959,22 @@ async getStore(store_id: string) {
 
   return data;
 }
+async getInstaUserByUsername(username: string) {
+    if (!username) return null;
 
+    const { data, error } = await this.supabase
+      .from('insta_users')
+      .select('*')
+      .eq('username', username.trim())
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching insta user:', error);
+      return null;
+    }
+
+    return data;
+  }
 
   
 

@@ -27,6 +27,8 @@ export class ResultsComponent implements OnInit {
   userId: string | null = null;
   originalPrivateContests: any[] = [];
   private_hide : boolean = true;
+  profile: any = null;
+  instaUserId: string | null = null;
 
   constructor(
     private supabaseService: SupabaseService,
@@ -41,14 +43,22 @@ export class ResultsComponent implements OnInit {
     this.message1 = '';
     this.userId = this.authService.getUserId();
 
-    if (!this.userId) {
+    const profile = await this.supabaseService.getProfile(this.userId!);
+    this.profile = profile;
+
+    const username = this.profile.instagram_url;
+
+    const instaUser = await this.supabaseService.getInstaUserByUsername(username);
+    this.instaUserId = instaUser?.uuid ?? null;
+
+    if (!this.userId && !this.instaUserId) {
       this.message1 = 'No History available';
       this.loading = false;
       return;
     }
-
+    
     try {
-      const privateContests = await this.supabaseService.getContestsHistory(this.userId);
+      const privateContests = await this.supabaseService.getContestsHistory(this.userId!, this.instaUserId!);
       const now = new Date();
 
       this.originalPrivateContests = privateContests.filter(c =>
