@@ -407,6 +407,9 @@ export class InstaCommentsComponent implements OnInit, OnDestroy {
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
       this.showWelcomeScreen = false;
       this.showGamePanel = false;
+      if (!this.isLoggedIn) {
+              this.insta_flow_LoginButton = true;
+            }
       this.showGameUpdate = true;
       this.confetti = false;
       this.cdr.detectChanges();

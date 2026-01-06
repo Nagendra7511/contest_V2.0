@@ -671,6 +671,9 @@ export class DrapdropGameComponent implements OnInit, AfterViewInit, OnDestroy {
       this.pauseMusic();
       this.showWelcomeScreen = false;
       this.showGamePanel = false;
+      if (!this.isLoggedIn) {
+              this.insta_flow_LoginButton = true;
+            }
       this.showGameUpdate = true;
       this.confetti = false;
       document.body.classList.remove('game-running');

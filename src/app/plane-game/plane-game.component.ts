@@ -652,6 +652,9 @@ private loadGiftImages(timeout = 5000): Promise<void> {
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
       this.pauseMusic();
       this.showGamePanel = false;
+      if (!this.isLoggedIn) {
+              this.insta_flow_LoginButton = true;
+            }
       this.showGameUpdate = true;
       this.confetti = false;
       document.body.classList.remove('game-running');

@@ -560,6 +560,9 @@ export class WordGameComponent implements OnInit, OnDestroy {
         this.confetti = false;
         this.pauseMusic();
         this.showGamePanel = false;
+        if (!this.isLoggedIn) {
+              this.insta_flow_LoginButton = true;
+            }
         this.showGameUpdate = true;
         document.body.classList.remove('game-running');
       })();
