@@ -177,7 +177,7 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
 
     try {
       this.userId = this.authserivice.getUserId();
-      console.log('User ID:', this.userId);
+      // console.log('User ID:', this.userId);
       const brandUser = await this.supabaseService.getBrandUser(this.userId!); 
 
       const contestData = await this.supabaseService.getContestById(contestId);
@@ -715,7 +715,7 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
   async onGameFinished() {
 
   if (!this.contestId) {
-    console.error('Missing contestId');
+    // console.error('Missing contestId');
     return;
   }
 

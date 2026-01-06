@@ -362,12 +362,12 @@ async getAllContest_assigned(userId: string) {
       .maybeSingle();
 
     if (error) {
-      console.error('Supabase error:', error);
+      // console.error('Supabase error:', error);
       return null;
     }
 
     if (!data) {
-      console.warn('No customer profile found for user:', userId);
+      // console.warn('No customer profile found for user:', userId);
     } else {
       // console.log('Customer profile fetched:', data);
     }
@@ -528,7 +528,7 @@ async playContest(params: {
   const { data, error } = await query.maybeSingle();
 
   if (error) {
-    console.error('Error checking has_played status:', error);
+    // console.error('Error checking has_played status:', error);
     return false;
   }
 
@@ -585,7 +585,7 @@ async playContest(params: {
       .eq('id', userId)
 
        if (error) {
-      console.error('Supabase error:', error);
+      // console.error('Supabase error:', error);
       return null;
       }
       else {
