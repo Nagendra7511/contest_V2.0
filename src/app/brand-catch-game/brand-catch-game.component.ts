@@ -135,6 +135,7 @@ hasPlayed = false;
     if (event?.success && event?.userId) {
       this.userId = event.userId;
       this.loadGameData();
+      const hasPlayed = await this.loadGameData();
       this.showModal = false;
       this.showLoginButton = false;
       this.showProfileModal = false;
@@ -643,7 +644,7 @@ hasPlayed = false;
       if (!this.isLoggedIn) {
               this.insta_flow_LoginButton = true;
             }
-      this.showGameUpdate = true;
+      this.showGameResult = true;
       this.confetti = false;
       document.body.classList.remove('game-running');
     }, 3500);

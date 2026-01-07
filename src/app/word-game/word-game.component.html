@@ -463,7 +463,7 @@ Wrong letters reduce your chances - lose them all and the game ends.</p>
             </div>
 
             <div class="col-md-12 ">
-              <p class="m-0"> score <strong>{{ gameResult.score}}</strong></p>
+              <p class="m-0"> score <strong>{{ gameResult?.score ?? scoreMessage }}</strong></p>
             </div>
           </div>
         </div>

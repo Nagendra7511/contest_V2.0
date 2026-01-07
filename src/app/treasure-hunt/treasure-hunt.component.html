@@ -447,7 +447,7 @@ Win a reward if you pick the right chest.</p>
             </div>
 
             <div class="col-md-12 ">
-              <p class="m-0"> score <strong>{{ gameResult.score}}</strong></p>
+              <p class="m-0"> score <strong>{{ gameResult?.score ?? score }}</strong></p>
               <!-- <p class="p-3"> {{ treasureDescription }}</p> -->
             </div>
           </div>

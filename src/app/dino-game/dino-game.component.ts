@@ -145,6 +145,7 @@ export class DinoGameComponent implements OnInit, OnDestroy, AfterViewInit {
     if (event?.success && event?.userId) {
       this.userId = event.userId;
       this.loadGameData();
+      const hasPlayed = await this.loadGameData();
       this.showModal = false;
       this.showLoginButton = false;
       this.showProfileModal = false;
@@ -730,7 +731,7 @@ export class DinoGameComponent implements OnInit, OnDestroy, AfterViewInit {
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
       this.pauseMusic();
       this.showGamePanel = false;
-      this.showGameUpdate = true;
+      this.showGameResult = true;
       this.confetti = false;
       document.body.classList.remove('game-running');
     }, 3500);
