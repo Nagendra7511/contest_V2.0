@@ -976,48 +976,51 @@ async getInstaUserByUsername(username: string) {
     return data;
   }
 
-  async linkInstaCustomerToContest(params: {
-  contestId: string;
+  // postlogin updating customer_id in customers_on_contest table
+  async linkInstaCustomerToContest(params: {  
   customerId: string;
   instaUserId: string;
 }): Promise<boolean> {
 
-  const { contestId, customerId, instaUserId } = params;
-
-  const { data, error: fetchErr } = await this.supabase
-    .from('customers_on_contest')
-    .select('id, customer_id')
-    .eq('contest_id', contestId)
-    .eq('insta_user_id', instaUserId)
-    .maybeSingle();
-
-  if (fetchErr) {
-    // console.error('Fetch failed:', fetchErr);
-    return false;
-  }
-
-  if (!data) {
-    // no IG entry found → nothing to update
-    return false;
-  }
-
-  // If already linked no need to update
-  if (data.customer_id) {
-    return true;
-  }
+  const { customerId, instaUserId } = params;
 
   const { error: updateErr } = await this.supabase
     .from('customers_on_contest')
     .update({ customer_id: customerId })
-    .eq('id', data.id);
+    .eq('insta_user_id', instaUserId)
+    .is('customer_id', null); // only update missing links
 
   if (updateErr) {
-    // console.error('Update failed:', updateErr);
+    console.error('Update failed:', updateErr);
     return false;
   }
 
   return true;
 }
+
+
+// postlogin updating customer_id in contest_results table
+async linkInstaCustomerToResults(params: {  
+  customerId: string;
+  instaUserId: string;
+}): Promise<boolean> {
+
+  const { customerId, instaUserId } = params;
+
+  const { error: updateErr } = await this.supabase
+    .from('contest_results')
+    .update({ customer_id: customerId })
+    .eq('insta_user_id', instaUserId)
+    .is('customer_id', null); // only update missing links
+
+  if (updateErr) {
+    console.error('Update failed:', updateErr);
+    return false;
+  }
+
+  return true;
+}
+
 
   
 

@@ -801,12 +801,16 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
 
    async coustomerIdUpdateInstaContest() {
 
-    if (this.instaUserId && this.contest.contestId && this.userId) {
-      await this.supaBaseService.linkInstaCustomerToContest({
-        contestId: this.contest.contestId,
-        instaUserId: this.instaUserId,
-        customerId: this.userId
-      });
-    }
+    if (this.instaUserId && this.userId) {
+    await this.supaBaseService.linkInstaCustomerToContest({
+      instaUserId: this.instaUserId,
+      customerId: this.userId
+    });
+
+    await this.supaBaseService.linkInstaCustomerToResults({
+      instaUserId: this.instaUserId,
+      customerId: this.userId
+    });
+  }
   }
 }

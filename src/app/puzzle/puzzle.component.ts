@@ -744,12 +744,16 @@ export class PuzzleComponent implements OnInit, OnDestroy {
 
    async coustomerIdUpdateInstaContest() {
 
-    if (this.instaUserId && this.contestId && this.userId) {
-      await this.supabaseService.linkInstaCustomerToContest({
-        contestId: this.contestId,
-        instaUserId: this.instaUserId,
-        customerId: this.userId
-      });
-    }
+     if (this.instaUserId && this.userId) {
+    await this.supabaseService.linkInstaCustomerToContest({
+      instaUserId: this.instaUserId,
+      customerId: this.userId
+    });
+
+    await this.supabaseService.linkInstaCustomerToResults({
+      instaUserId: this.instaUserId,
+      customerId: this.userId
+    });
+  }
   }
 }

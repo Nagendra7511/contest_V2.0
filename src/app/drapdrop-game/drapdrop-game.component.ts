@@ -882,12 +882,16 @@ export class DrapdropGameComponent implements OnInit, AfterViewInit, OnDestroy {
 
    async coustomerIdUpdateInstaContest() {
 
-    if (this.instaUserId && this.contest.contestId && this.userId) {
-      await this.supabaseService.linkInstaCustomerToContest({
-        contestId: this.contest.contestId,
-        instaUserId: this.instaUserId,
-        customerId: this.userId
-      });
-    }
+    if (this.instaUserId && this.userId) {
+    await this.supabaseService.linkInstaCustomerToContest({
+      instaUserId: this.instaUserId,
+      customerId: this.userId
+    });
+
+    await this.supabaseService.linkInstaCustomerToResults({
+      instaUserId: this.instaUserId,
+      customerId: this.userId
+    });
+  }
   }
 }
