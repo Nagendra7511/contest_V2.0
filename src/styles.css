@@ -1874,27 +1874,28 @@ body.home
 }
 .bottom-actions {
   display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  padding-top: 10px;
+  width: 96%;
+  gap: 5px;
 }
 
 .action-btn {
-  flex: 1;
-  background: #fff;
-  border-radius: 14px;
-  border: none;
-  padding: 2px 8px;
+  flex: 1;             /* ensures equal width */
   display: flex;
   flex-direction: column;
+  justify-content: center;  /* vertically center content */
   align-items: center;
+  min-height: 60px;     /* ensures equal height */
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #fff;  
+  padding: 3px;
   font-size: 13px;
   font-weight: 500;
   color: #333;
-  /* box-shadow: 0 4px 10px rgba(0,0,0,0.06); */
   transition: all 0.2s ease;
   outline: none;
 }
+
 .action-btn:focus-within, .action-btn:focus {
   outline: none;
 }
