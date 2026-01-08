@@ -225,11 +225,18 @@ async getAllContest_assigned(userId: string) {
      1️⃣ CHECK IF RESULT EXISTS FOR CONTEST
      (ANY USER)
   ------------------------------------------------- */
-  const { data: existing } = await this.supabase
-    .from('contest_results')
-    .select('id')
-    .eq('contest_id', contest_id)
-    .maybeSingle();
+  const query = this.supabase
+  .from('contest_results')
+  .select('id')
+  .eq('contest_id', contest_id);
+
+if (customer_id) {
+  query.eq('customer_id', customer_id);
+} else if (insta_user_id) {
+  query.eq('insta_user_id', insta_user_id);
+}
+
+const { data: existing } = await query.maybeSingle();
 
   if (existing) {
     // ❌ Result already exists → SKIP
@@ -776,25 +783,31 @@ async playContest(params: {
 
   // Update insta_users table (identified + customer_id)
 async updateInstaUsersTable(insta_userID: string, customerId: string) {
-  // Fetch existing insta_users row
-  const { data, error: fetchError } = await this.supabase
+  // 1. Reverse check: is this customer used anywhere already?
+  const { data: existing, error: existingErr } = await this.supabase
     .from('insta_users')
-    .select('customer_id, identified')
-    .eq('uuid', insta_userID)
+    .select('uuid')
+    .eq('customer_id', customerId)
     .single();
 
-  if (fetchError) {
-    console.error('Error fetching insta_users:', fetchError);
-    return fetchError;
-  }
-
-  // If already linked, do NOT update
-  if (data?.customer_id) {
-    // Already linked -> Nothing to update
+  if (existing && existing.uuid !== insta_userID) {
+    // Customer already linked → DO NOT relink
+    console.warn('Customer already linked to another insta_user');
     return null;
   }
 
-  // Perform update only if customer_id is NULL
+  // 2. Forward check (your existing code)
+  const { data, error: fetchError } = await this.supabase
+    .from('insta_users')
+    .select('customer_id')
+    .eq('uuid', insta_userID)
+    .single();
+
+  if (data?.customer_id) {
+    return null; // already linked, do nothing
+  }
+
+  // 3. Update first-time link
   const { error } = await this.supabase
     .from('insta_users')
     .update({
@@ -803,12 +816,9 @@ async updateInstaUsersTable(insta_userID: string, customerId: string) {
     })
     .eq('uuid', insta_userID);
 
-  if (error) {
-    console.error('Error updating insta_users table:', error);
-  }
-
-  return error;
+  return error || null;
 }
+
 
 // Check & Insert customer/instgram users into customers_on_store table only once
 async addUserToStore(params: {
