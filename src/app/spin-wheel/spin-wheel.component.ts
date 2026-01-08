@@ -109,7 +109,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
 
       const profile = await this.supaBaseService.getProfile(this.userId!);
       const firstName = profile?.first_name?.trim();
-
+      this.coustomerIdUpdateInstaContest(); 
       if (firstName) {
         setTimeout(() => {
           (async () => {
@@ -128,6 +128,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
         this.showModal = false;
         this.showLoginButton = false;
         this.showProfileModal = true;
+        this.insta_flow_LoginButton = false;
       }
 
     } else if (event?.profileUpdated) {
@@ -796,5 +797,16 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
     const url = `/brand-info/${storeId}`;
     window.open(url, '_blank');
   }
+  }
+
+   async coustomerIdUpdateInstaContest() {
+
+    if (this.instaUserId && this.contest.contestId && this.userId) {
+      await this.supaBaseService.linkInstaCustomerToContest({
+        contestId: this.contest.contestId,
+        instaUserId: this.instaUserId,
+        customerId: this.userId
+      });
+    }
   }
 }

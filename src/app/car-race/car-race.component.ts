@@ -184,9 +184,10 @@ hasPlayed = false;
       const isComplete = !!updatedProfile?.first_name?.trim();
       this.authserivice.setProfileComplete(isComplete);
             this.insta_flow_LoginButton = false;
-            if (!this.hasPlayed) {
+           if (!this.hasPlayed) {
               ($('#infoModal') as any).modal('show');
             }
+            this.coustomerIdUpdateInstaContest(); 
     }
   }
 
@@ -1630,4 +1631,15 @@ async onGameFinished() {
       history.pushState(null, '', window.location.href);
     }
   };
+
+  async coustomerIdUpdateInstaContest() {
+
+    if (this.instaUserId && this.contestId && this.userId) {
+      await this.supabaseService.linkInstaCustomerToContest({
+        contestId: this.contestId,
+        instaUserId: this.instaUserId,
+        customerId: this.userId
+      });
+    }
+  }
 }

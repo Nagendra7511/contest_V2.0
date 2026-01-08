@@ -117,7 +117,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const profile = await this.supabaseService.getProfile(this.userId!);
       const firstName = profile?.first_name?.trim();
-
+      this.coustomerIdUpdateInstaContest();
       if (firstName) {
         setTimeout(() => {
           (async () => {
@@ -136,6 +136,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showModal = false;
         this.showLoginButton = false;
         this.showProfileModal = true;
+        this.insta_flow_LoginButton = false;
       }
 
     } else if (event?.profileUpdated) {
@@ -769,5 +770,16 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
     const url = `/brand-info/${storeId}`;
     window.open(url, '_blank');
   }
+  }
+
+   async coustomerIdUpdateInstaContest() {
+
+    if (this.instaUserId && this.contest.contestId && this.userId) {
+      await this.supabaseService.linkInstaCustomerToContest({
+        contestId: this.contest.contestId,
+        instaUserId: this.instaUserId,
+        customerId: this.userId
+      });
+    }
   }
 }

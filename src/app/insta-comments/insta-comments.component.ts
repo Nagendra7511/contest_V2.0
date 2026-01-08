@@ -105,7 +105,7 @@ export class InstaCommentsComponent implements OnInit, OnDestroy {
 
       const profile = await this.supabaseService.getProfile(this.userId!);
       const firstName = profile?.first_name?.trim();
-
+      this.coustomerIdUpdateInstaContest();
       if (firstName) {
         setTimeout(() => {
           (async () => {
@@ -124,6 +124,7 @@ export class InstaCommentsComponent implements OnInit, OnDestroy {
         this.showModal = false;
         this.showLoginButton = false;
         this.showProfileModal = true;
+        this.insta_flow_LoginButton = false;
       }
 
     } else if (event?.profileUpdated) {
@@ -545,5 +546,14 @@ async onGameFinished() {
     }
   }
   
+   async coustomerIdUpdateInstaContest() {
 
+    if (this.instaUserId && this.contestId && this.userId) {
+      await this.supabaseService.linkInstaCustomerToContest({
+        contestId: this.contestId,
+        instaUserId: this.instaUserId,
+        customerId: this.userId
+      });
+    }
+  }
 }

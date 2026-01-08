@@ -160,9 +160,10 @@ export class BoatGameComponent implements AfterViewInit, OnDestroy, OnInit {
       const isComplete = !!updatedProfile?.first_name?.trim();
       this.authserivice.setProfileComplete(isComplete);
             this.insta_flow_LoginButton = false;
-            if (!this.hasPlayed) {
+           if (!this.hasPlayed) {
               ($('#infoModal') as any).modal('show');
-            } 
+            }
+            this.coustomerIdUpdateInstaContest();  
     }
   }
 
@@ -1412,6 +1413,17 @@ async onGameFinished() {
     this.ctx.font = '14px system-ui';
     this.ctx.fillText('Tap the canvas to start', cx, cy + 34);
     this.ctx.restore();
+  }
+
+    async coustomerIdUpdateInstaContest() {
+
+    if (this.instaUserId && this.contestId && this.userId) {
+      await this.supabaseService.linkInstaCustomerToContest({
+        contestId: this.contestId,
+        instaUserId: this.instaUserId,
+        customerId: this.userId
+      });
+    }
   }
 
 }

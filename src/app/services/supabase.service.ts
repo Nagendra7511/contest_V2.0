@@ -976,6 +976,49 @@ async getInstaUserByUsername(username: string) {
     return data;
   }
 
+  async linkInstaCustomerToContest(params: {
+  contestId: string;
+  customerId: string;
+  instaUserId: string;
+}): Promise<boolean> {
+
+  const { contestId, customerId, instaUserId } = params;
+
+  const { data, error: fetchErr } = await this.supabase
+    .from('customers_on_contest')
+    .select('id, customer_id')
+    .eq('contest_id', contestId)
+    .eq('insta_user_id', instaUserId)
+    .maybeSingle();
+
+  if (fetchErr) {
+    // console.error('Fetch failed:', fetchErr);
+    return false;
+  }
+
+  if (!data) {
+    // no IG entry found → nothing to update
+    return false;
+  }
+
+  // If already linked no need to update
+  if (data.customer_id) {
+    return true;
+  }
+
+  const { error: updateErr } = await this.supabase
+    .from('customers_on_contest')
+    .update({ customer_id: customerId })
+    .eq('id', data.id);
+
+  if (updateErr) {
+    // console.error('Update failed:', updateErr);
+    return false;
+  }
+
+  return true;
+}
+
   
 
 }

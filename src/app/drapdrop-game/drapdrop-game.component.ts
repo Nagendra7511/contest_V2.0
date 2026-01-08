@@ -69,9 +69,10 @@ export class DrapdropGameComponent implements OnInit, AfterViewInit, OnDestroy {
             const isComplete = !!updatedProfile?.first_name?.trim();
             this.authserivice.setProfileComplete(isComplete);
             this.insta_flow_LoginButton = false;
-            if (!this.hasPlayed) {
+           if (!this.hasPlayed) {
               ($('#infoModal') as any).modal('show');
             }
+            this.coustomerIdUpdateInstaContest(); 
     } 
   }
 
@@ -878,4 +879,15 @@ export class DrapdropGameComponent implements OnInit, AfterViewInit, OnDestroy {
       history.pushState(null, '', window.location.href);
     }
   };
+
+   async coustomerIdUpdateInstaContest() {
+
+    if (this.instaUserId && this.contest.contestId && this.userId) {
+      await this.supabaseService.linkInstaCustomerToContest({
+        contestId: this.contest.contestId,
+        instaUserId: this.instaUserId,
+        customerId: this.userId
+      });
+    }
+  }
 }

@@ -153,9 +153,10 @@ export class DinoGameComponent implements OnInit, OnDestroy, AfterViewInit {
       const isComplete = !!updatedProfile?.first_name?.trim();
       this.authserivice.setProfileComplete(isComplete);
             this.insta_flow_LoginButton = false;
-            if (!this.hasPlayed) {
+           if (!this.hasPlayed) {
               ($('#infoModal') as any).modal('show');
             }
+            this.coustomerIdUpdateInstaContest(); 
     }
   }
 
@@ -951,4 +952,14 @@ export class DinoGameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.ctx.fillText('Tap or click the canvas to start', cx, cy + 36);
   }
 
+   async coustomerIdUpdateInstaContest() {
+
+    if (this.instaUserId && this.contestId && this.userId) {
+      await this.supabaseService.linkInstaCustomerToContest({
+        contestId: this.contestId,
+        instaUserId: this.instaUserId,
+        customerId: this.userId
+      });
+    }
+  }
 }
