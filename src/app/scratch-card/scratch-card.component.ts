@@ -576,7 +576,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
           if (!this.isLoggedIn) {
               this.insta_flow_LoginButton = true;
             }
-          this.showGameUpdate = true;
+          this.showGameResult = true;
           document.body.classList.remove('game-running');
         })();
       }, 3500);
