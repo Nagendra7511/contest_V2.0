@@ -82,6 +82,7 @@ export class PriceMatchComponent implements OnInit, OnDestroy {
   instaUserId: string | null = null;
   insta_flow_LoginButton = false;
   hasPlayed = false;
+  customerInstaId: string | null = null;
 
   constructor(
     private router: Router,
@@ -136,8 +137,23 @@ export class PriceMatchComponent implements OnInit, OnDestroy {
            if (!this.hasPlayed) {
               ($('#infoModal') as any).modal('show');
             }
-            this.coustomerIdUpdateInstaContest();  
+            // this.coustomerIdUpdateInstaContest();  
     } 
+  }
+
+  private async loadCustomerInstaId() {
+    this.isLoggedIn = !!this.userId;
+    if (this.isLoggedIn) {
+      this.profile = await this.supabaseService.getProfile(this.userId!);
+
+      const username = this.profile?.instagram_url;
+      if (username) {
+        const instaUser = await this.supabaseService.getInstaUserByUsername(username);
+        this.customerInstaId = instaUser?.uuid ?? null;
+      } else {
+        this.customerInstaId = null;
+      }
+    }
   }
 
 
@@ -147,16 +163,16 @@ export class PriceMatchComponent implements OnInit, OnDestroy {
     const contestId = this.route.snapshot.queryParamMap.get('cid');
     const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
 
-        // 🔍 Fetch insta user if IG param exists
+    this.isLoggedIn = !!this.userId;
+  
+    // 🔍 Fetch insta user if IG param exists
     if (insta_user_ig) {
-      const instaData = await this.supabaseService.getContestInstaId(insta_user_ig);
+      // alert('abc');
+      const instaData = await this.supabaseService.getContestInstaId(insta_user_ig, contestId!);
 
-      if (!instaData) {
-        // console.error('Invalid insta_user_ig');
-        return;
+      if (instaData) {
+        this.instaUserId = instaData.insta_user; // ✅ actual insta user ID
       }
-
-      this.instaUserId = instaData.insta_user; // ✅ actual insta user ID
     }
 
     // Store user_inst_ID in localStorage
@@ -241,33 +257,62 @@ export class PriceMatchComponent implements OnInit, OnDestroy {
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
       // console.log('Has played:', hasPlayed);
       if (this.hasPlayed) {
-      //  this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
-
         const data = await this.supabaseService.getUserResult({
           contestId: this.contest.contest_id,
           customerId: this.userId ?? null,
           instaUserId: this.instaUserId ?? null
         });
-        this.gameResult = data;
-        this.showWelcomeScreen = false;
-        this.showGamePanel = false;
-        this.showGameResult = true;
-        if (!this.isLoggedIn) {
-          this.insta_flow_LoginButton = true;
+        if (insta_user_ig) {
+          const check = !this.isLoggedIn
+            ? await this.supabaseService.validateAndUpdateInstaUser(insta_user_ig, this.contest.contest_id)
+            : await this.supabaseService.validateAndUpdateInstaUser(
+              insta_user_ig,
+              this.contest.contest_id,
+              await this.supabaseService.getProfile(this.userId!)
+            );
+
+          this.loading = true;  
+          setTimeout(async () => {
+            await this.loadCustomerInstaId(); // refresh the customer insta id
+            
+            const isLinkedCorrectly = this.instaUserId === this.customerInstaId;
+
+            if (contestData.insta_post && this.isLoggedIn && !isLinkedCorrectly) {
+              this.showAccessMessage = true;
+              this.insta_post_view = true;
+              this.showGameResult = false;
+              this.loading = false;
+              return;
+            }
+          }, 1000);
           this.loading = false;
-          return
+
+          this.gameResult = data;
+          this.showWelcomeScreen = false;
+          this.showGamePanel = false;
+          this.showGameResult = true;
+
+          if (!this.isLoggedIn) {
+            this.insta_flow_LoginButton = true;
+            this.loading = false;
+            return
+          }
+
         }
-        const check = !this.isLoggedIn
-          ? await this.supabaseService.validateAndUpdateInstaUser(insta_user_ig!)
-          : await this.supabaseService.validateAndUpdateInstaUser(insta_user_ig!,
-            await this.supabaseService.getProfile(this.userId!)
-          );
-          
+        if (!insta_user_ig)
+        {
+          this.gameResult = data;
+          this.showWelcomeScreen = false;
+          this.showGamePanel = false;
+          this.showGameResult = true;
+        }
+
         this.loading = false;
         return;
       }
 
 
+      
       if (contestData.insta_post) {
 
         if (!insta_user_ig) {
@@ -278,11 +323,20 @@ export class PriceMatchComponent implements OnInit, OnDestroy {
         }
 
         const check = !this.isLoggedIn
-          ? await this.supabaseService.validateAndUpdateInstaUser(insta_user_ig)
-          : await this.supabaseService.validateAndUpdateInstaUser(
-            insta_user_ig,
+          ? await this.supabaseService.validateAndUpdateInstaUser(insta_user_ig, this.contest.contest_id)
+          : await this.supabaseService.validateAndUpdateInstaUser(insta_user_ig, this.contest.contest_id,
             await this.supabaseService.getProfile(this.userId!)
           );
+        const isLinkedCorrectly = this.instaUserId === this.customerInstaId;
+
+        // console.log('isLinkedCorrectly:',  this.instaUserId,this.customerInstaId);
+        if (contestData.insta_post && this.isLoggedIn && !isLinkedCorrectly) {
+          
+          this.showAccessMessage = true;
+          this.insta_post_view = true;
+          this.loading = false;
+          return;
+        }
          
         if (!check.valid) {
           this.showAccessMessage = true;
@@ -714,18 +768,14 @@ async onGameFinished() {
     }
   };
 
-   async coustomerIdUpdateInstaContest() {
+  //  async coustomerIdUpdateInstaContest() {
 
-     if (this.instaUserId && this.userId) {
-    await this.supabaseService.linkInstaCustomerToContest({
-      instaUserId: this.instaUserId,
-      customerId: this.userId
-    });
-
-    await this.supabaseService.linkInstaCustomerToResults({
-      instaUserId: this.instaUserId,
-      customerId: this.userId
-    });
-  }
-  }
+  //   if (this.instaUserId && this.contestId && this.userId) {
+  //     await this.supabaseService.linkInstaCustomerToContest({
+  //       contestId: this.contestId,
+  //       instaUserId: this.instaUserId,
+  //       customerId: this.userId
+  //     });
+  //   }
+  // }
 }

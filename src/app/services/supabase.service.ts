@@ -533,11 +533,13 @@ async playContest(params: {
     .eq('contest_id', contestId)
     .limit(1);
 
+    // console.log('checkIfContestPlayed params:', params);
   // ✅ CHECK BOTH IDENTIFIERS
   if (customerId && instaUserId) {
     query = query.or(
       `customer_id.eq.${customerId},insta_user_id.eq.${instaUserId}`
     );
+    // console.log('checkIfContestPlayed query with both IDs');
   } else if (customerId) {
     query = query.eq('customer_id', customerId);
   } else {
@@ -545,7 +547,7 @@ async playContest(params: {
   }
 
   const { data, error } = await query.maybeSingle();
-
+// console.log('checkIfContestPlayed data:', data);
   if (error) {
     // console.error('Error checking has_played status:', error);
     return false;
@@ -737,26 +739,32 @@ async playContest(params: {
   return contestsWithCounts;
 }
 
-  async getContestInstaId(insta_user_ig: string) {
-    const { data, error } = await this.supabase.from('insta_user_on_contest')
-      .select(`id, insta_user, username, contest_id`)
-      .eq('id', insta_user_ig)
-      .single();
-    if (error) {
-      console.error('Error fetching contest by ID:', error);
-      return null;
-    }
-    return data;
+ async getContestInstaId(insta_user_ig: string, contestId: string) {
+  const { data, error } = await this.supabase
+    .from('insta_user_on_contest')
+    .select('id, insta_user, username, contest_id')
+    .eq('id', insta_user_ig.trim())
+    .eq('contest_id', contestId)
+    .maybeSingle();
+
+  if (error) {
+    // console.error('Error fetching contest by IG:', error);
+    return null;
   }
 
+  return data;
+}
 
 
-  async validateAndUpdateInstaUser(insta_user_ig: string, profile?: any) {
+
+
+
+  async validateAndUpdateInstaUser(insta_user_ig: string, contestId: string, profile?: any) {
   try {
-    const contestUser = await this.getContestInstaId(insta_user_ig);
+    const contestUser = await this.getContestInstaId(insta_user_ig, contestId);
 
     if (!contestUser || !contestUser.insta_user) {
-      return { valid: false, instagram_url: null };
+      return { valid: false, updated: false, instagram_url: null };
     }
 
     const instagram_url = contestUser.username;
