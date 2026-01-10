@@ -525,7 +525,7 @@
         <table class="w-100 table table-striped" *ngIf="!utilService.loading && utilService.leaderBoardList.length > 0">
           <tbody>
             <tr *ngFor="let item of utilService.leaderBoardList">
-              <td width="70">{{ item.first_name ?? item.instagram_url }}</td>
+              <td width="70">{{ item.first_name ?? item.insta_username }}</td>
               <td width="30" class="text-center">{{ item.score }}</td>
             </tr>
           </tbody>
