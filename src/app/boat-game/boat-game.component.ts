@@ -1059,7 +1059,7 @@ private checkPickups() {
       this.burstconfetti_boat(g.x, g.y);
       this.addFoam(this.boat.x, this.boat.y + this.world.boatSize * 0.6 * this.dpr, this.boat.angle);
       // debug log to help you confirm the pickup
-      console.log('[boat-game] gift collected at', Math.round(g.x), Math.round(g.y), 'r:', Math.round(g.r));
+      // console.log('[boat-game] gift collected at', Math.round(g.x), Math.round(g.y), 'r:', Math.round(g.r));
     }
   }
 }
@@ -1069,7 +1069,7 @@ private checkPickups() {
   for (const d of this.drums) {
     if (this.circleHit(this.boat.x, this.boat.y, r, d.x, d.y, d.r)) {
       // debug info to ensure crash source is drum
-      console.log('[boat-game] CRASH with drum at', Math.round(d.x), Math.round(d.y), 'r:', Math.round(d.r));
+      // console.log('[boat-game] CRASH with drum at', Math.round(d.x), Math.round(d.y), 'r:', Math.round(d.r));
       this.explode(this.boat.x, this.boat.y);
       return true;
     }
