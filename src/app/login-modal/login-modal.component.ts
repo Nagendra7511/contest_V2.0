@@ -29,6 +29,8 @@ export class LoginModalComponent implements OnInit, OnDestroy {
   isOtpSent: boolean = false;
   message: string = '';
   isLoading: boolean = false;
+  // profile: any = null;
+  // instaUserId: string | null = null;
 
   
   otpValues: string[] = ['', '', '', '', '', ''];
@@ -131,7 +133,25 @@ export class LoginModalComponent implements OnInit, OnDestroy {
 
         const profile = await this.supabaseService.getProfile(userId);
         this.loginComplete.emit({ success: true, userId: userId });
+
+        // this.profile = profile;
+
+        // const username = this.profile.instagram_url;
+
+        // const instaUser = await this.supabaseService.getInstaUserByUsername(username);
+        // this.instaUserId = instaUser?.uuid ?? null;
         
+        // if (this.instaUserId && userId) {
+        //   await this.supabaseService.linkInstaCustomerToContest({
+        //     instaUserId: this.instaUserId,
+        //     customerId: userId
+        //   });
+        //   await this.supabaseService.linkInstaCustomerToResults({
+        //     instaUserId: this.instaUserId,
+        //     customerId: userId
+        //   });
+        // }
+
       } else {
         this.message = 'Invalid OTP. Please try again.';
       }
