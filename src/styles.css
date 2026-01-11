@@ -1855,7 +1855,7 @@ body.home
 }
 .missing {
     background-color: #E74C3C;
-    color: white;
+    color: white !important;
     padding: 2px 15px;
     border-radius: 4px;
     margin-right: 6px;

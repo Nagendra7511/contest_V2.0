@@ -50,7 +50,7 @@
     <a routerLink="/profile" class="redirection" class="missing" >
      <i class="fa fa-user-circle" aria-hidden="true"></i> 
      
-     <span>Complete your profile to unlock all contests. Some contests are only available to users with a full profile.</span>
+     <span>Complete your profile and receive more updates from your favorite brands</span>
     </a>
   </div>
 </section>
@@ -382,8 +382,8 @@
         <img src="images/tiktok.png" alt="tiktok">
       </a>
     </div>
-     <div *ngIf="insta_flow_LoginButton" class="text-center col-12">
-        <button class="btn btn-primary text-center mt-3" (click)="openModal()">Login</button>
+      <div *ngIf="insta_flow_LoginButton" class="text-center col-12">
+        <button class="btn btn-primary text-center mt-3" (click)="openModal()">Log in to access members-only contests</button>
       </div>
     <div class="text-center col-12"><button class="btn btn-primary btn-sm text-center mt-3"  (click)="goToBrandInfo()">Brand Info</button></div>
 
@@ -395,6 +395,10 @@
 <!-- Game Results Panel -->
 <div *ngIf="showGameResult" class="wrapper game-update">
 
+  <div *ngIf="insta_flow_LoginButton" class="text-center col-12 mb-4">
+  <p class="mb-0"> Top players don’t miss this 👑</p>
+  <button class="btn btn-primary text-center mt-3" (click)="openModal()">Log in to access members-only contests</button>
+</div>
 
   <div class="col-md-12 row justify-content-center m-0">
     <div class="col-md-5 mb-4">
@@ -490,9 +494,9 @@
         <img src="images/tiktok.png" alt="tiktok">
       </a>
     </div>
-     <div *ngIf="insta_flow_LoginButton" class="text-center col-12">
-        <button class="btn btn-primary text-center mt-3" (click)="openModal()">Login</button>
-      </div>
+      <!-- <div *ngIf="insta_flow_LoginButton" class="text-center col-12">
+        <button class="btn btn-primary text-center mt-3" (click)="openModal()">Log in to access members-only contests</button>
+      </div> -->
     <!-- <div class="text-center col-12"><button class="btn btn-primary btn-sm text-center mt-3"  (click)="goToBrandInfo()">Brand Info</button></div> -->
 
   </div>
