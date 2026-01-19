@@ -139,13 +139,6 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
     const profile = await this.supabaseService.getProfile(this.userId!);
     this.profile = profile;
 
-    const username = this.profile.instagram_url;
-
-    const instaUser = await this.supabaseService.getInstaUserByUsername(username);
-    this.customerInstaId = instaUser?.uuid ?? null;
-    console.log('customerInstaId:', this.customerInstaId);
-
-
     if (isPlatformBrowser(this.platformId)) {
     window.addEventListener('popstate', this.handleBackNavigation);
     window.addEventListener('beforeunload', this.handleBeforeUnload);
@@ -172,7 +165,7 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
 
 
   async loadGameData(): Promise<void> {
-    debugger;
+    // debugger;
     document.body.classList.add('memory-active');
 
     const contestId = this.route.snapshot.queryParamMap.get('cid');
