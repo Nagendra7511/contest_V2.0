@@ -262,10 +262,11 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
       const brandData = await this.supabaseService.getBrandStoreID(this.store_id!);
       this.brand = brandData || [];
       this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
+      await this.loadCustomerInstaId();
       this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
-         instaUserId: this.instaUserId ?? null
+         instaUserId: this.instaUserId ?? this.customerInstaId ?? null
       });
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
       // console.log('Has played:', hasPlayed);
@@ -273,7 +274,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
         const data = await this.supabaseService.getUserResult({
           contestId: this.contest.contest_id,
           customerId: this.userId ?? null,
-          instaUserId: this.instaUserId ?? null
+          instaUserId: this.instaUserId ?? this.customerInstaId ?? null
         });
         if (insta_user_ig) {
           const check = !this.isLoggedIn
@@ -443,7 +444,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
      this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
-         instaUserId: this.instaUserId ?? null
+         instaUserId: this.instaUserId ?? this.customerInstaId ?? null
       });
 
     if (this.hasPlayed) {
@@ -454,7 +455,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
     const customerData = await this.supabaseService.getContestProbability({
       contestId: this.contest.contest_id,
       customerId: this.userId ?? null,
-      instaUserId: this.instaUserId ?? null
+      instaUserId: this.instaUserId ?? this.customerInstaId ?? null
     });
 
     this.contest.probability_of_winning = customerData?.probability_of_winning ?? 1;

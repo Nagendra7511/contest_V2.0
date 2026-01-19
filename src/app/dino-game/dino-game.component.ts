@@ -272,10 +272,11 @@ export class DinoGameComponent implements OnInit, OnDestroy, AfterViewInit {
       const brandData = await this.supabaseService.getBrandStoreID(this.store_id!);
       this.brand = brandData || [];
       this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
-     this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
+      await this.loadCustomerInstaId();
+      this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
-         instaUserId: this.instaUserId ?? null
+         instaUserId: this.instaUserId ?? this.customerInstaId ?? null
       });
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
       // console.log('Has played:', hasPlayed);
@@ -283,7 +284,7 @@ export class DinoGameComponent implements OnInit, OnDestroy, AfterViewInit {
         const data = await this.supabaseService.getUserResult({
           contestId: this.contest.contest_id,
           customerId: this.userId ?? null,
-          instaUserId: this.instaUserId ?? null
+          instaUserId: this.instaUserId ?? this.customerInstaId ?? null
         });
         if (insta_user_ig) {
           const check = !this.isLoggedIn
@@ -475,7 +476,7 @@ export class DinoGameComponent implements OnInit, OnDestroy, AfterViewInit {
      this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
-         instaUserId: this.instaUserId ?? null
+         instaUserId: this.instaUserId ?? this.customerInstaId ?? null
       });
     if (this.hasPlayed) {
       this.loadGameData();

@@ -259,15 +259,16 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
       this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
-        instaUserId: this.instaUserId ?? null
+        instaUserId: this.instaUserId ?? this.customerInstaId ?? null
       });
       // console.log('Has played status:', hasPlayed);
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      await this.loadCustomerInstaId();
       if (this.hasPlayed) {
         const data = await this.supabaseService.getUserResult({
           contestId: this.contest.contest_id,
           customerId: this.userId ?? null,
-          instaUserId: this.instaUserId ?? null
+          instaUserId: this.instaUserId ?? this.customerInstaId ?? null
         });
         if (insta_user_ig) {
           const check = !this.isLoggedIn
@@ -443,7 +444,7 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
          this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
-         instaUserId: this.instaUserId ?? null
+         instaUserId: this.instaUserId ?? this.customerInstaId ?? null
       });
     if (this.hasPlayed) {
       this.loadGameData();

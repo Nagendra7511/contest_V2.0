@@ -255,10 +255,11 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
       const brandData = await this.supaBaseService.getBrandStoreID(this.store_id!);
       this.brand = brandData || [];
       this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
+      await this.loadCustomerInstaId();
       this.hasPlayed = await this.supaBaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
-         instaUserId: this.instaUserId ?? null
+         instaUserId: this.instaUserId ?? this.customerInstaId ?? null
       });
       this.participationCount = await this.supaBaseService.getContestCount(this.contest.contest_id);
       // console.log('Has played:', hasPlayed);
@@ -266,7 +267,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
         const data = await this.supaBaseService.getUserResult({
           contestId: this.contest.contest_id,
           customerId: this.userId ?? null,
-          instaUserId: this.instaUserId ?? null
+          instaUserId: this.instaUserId ?? this.customerInstaId ?? null
         });
         if (insta_user_ig) {
           const check = !this.isLoggedIn
@@ -476,7 +477,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
     this.hasPlayed = await this.supaBaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
-         instaUserId: this.instaUserId ?? null
+         instaUserId: this.instaUserId ?? this.customerInstaId ?? null
       });
 
     if (this.hasPlayed) {
@@ -487,7 +488,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
     const customerData = await this.supaBaseService.getContestProbability({
       contestId: this.contest.contest_id,
       customerId: this.userId ?? null,
-      instaUserId: this.instaUserId ?? null
+      instaUserId: this.instaUserId ?? this.customerInstaId ?? null
     });
 
     this.contest.probability_of_winning = customerData?.probability_of_winning ?? 1;

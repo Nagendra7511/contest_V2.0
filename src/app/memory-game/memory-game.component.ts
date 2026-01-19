@@ -253,10 +253,11 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
       const brandData = await this.supabaseService.getBrandStoreID(this.store_id!);
       this.brand = brandData || [];
       this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
+      await this.loadCustomerInstaId();
      this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
-         instaUserId: this.instaUserId ?? null
+         instaUserId: this.instaUserId ?? this.customerInstaId ?? null
       });
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
       // console.log('Has played:', hasPlayed);
@@ -264,7 +265,7 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
         const data = await this.supabaseService.getUserResult({
           contestId: this.contest.contest_id,
           customerId: this.userId ?? null,
-          instaUserId: this.instaUserId ?? null
+          instaUserId: this.instaUserId ?? this.customerInstaId ?? null
         });
         if (insta_user_ig) {
           const check = !this.isLoggedIn
@@ -275,10 +276,10 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
               await this.supabaseService.getProfile(this.userId!)
             );
 
-          this.loading = true;  
+          this.loading = true;
           setTimeout(async () => {
             await this.loadCustomerInstaId(); // refresh the customer insta id
-            
+
             const isLinkedCorrectly = this.instaUserId === this.customerInstaId;
 
             if (contestData.insta_post && this.isLoggedIn && !isLinkedCorrectly) {
@@ -303,8 +304,7 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
           }
 
         }
-        if (!insta_user_ig)
-        {
+        if (!insta_user_ig) {
           this.gameResult = data;
           this.showWelcomeScreen = false;
           this.showGamePanel = false;
@@ -458,7 +458,7 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
   this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
-         instaUserId: this.instaUserId ?? null
+         instaUserId: this.instaUserId ?? this.customerInstaId ?? null
       });
   if (this.hasPlayed) {
     this.loadGameData();
