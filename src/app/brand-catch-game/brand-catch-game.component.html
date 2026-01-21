@@ -399,6 +399,10 @@
 <!-- Game Results Panel -->
 <div *ngIf="showGameResult" class="wrapper max-width-800 game-update">
 
+  <div *ngIf="insta_flow_LoginButton" class="text-center col-12 mb-4">
+  <p class="mb-0"> Top players don’t miss this 👑</p>
+  <button class="btn btn-primary text-center mt-3" (click)="openModal()">Log in to access members-only contests</button>
+</div>
 
   <div class="col-md-12 row justify-content-center m-0">
     <div class="col-md-5 mb-4">
@@ -494,9 +498,9 @@
         <img src="images/tiktok.png" alt="tiktok">
       </a>
     </div>
-      <div *ngIf="insta_flow_LoginButton" class="text-center col-12">
+      <!-- <div *ngIf="insta_flow_LoginButton" class="text-center col-12">
         <button class="btn btn-primary text-center mt-3" (click)="openModal()">Log in to access members-only contests</button>
-      </div>
+      </div> -->
     <!-- <div class="text-center col-12"><button class="btn btn-primary btn-sm text-center mt-3"  (click)="goToBrandInfo()">Brand Info</button></div> -->
 
   </div>
