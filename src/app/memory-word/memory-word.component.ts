@@ -170,7 +170,8 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
     document.body.classList.add('memory-active');
 
     const contestId = this.route.snapshot.queryParamMap.get('cid');
-    const insta_user_ig = this.route.snapshot.queryParamMap.get('ig'); 
+    const insta_user_ig = this.route.snapshot.queryParamMap.get('ig');
+    const store_id = this.route.snapshot.queryParamMap.get('sid'); 
     this.isLoggedIn = !!this.userId;
   
      
@@ -233,7 +234,28 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
         }
       }      
 
-      
+      this.store_id = contestData.store_id || null;
+      this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      this.userId = localStorage.getItem('userId')!;
+      this.isLoggedIn = !!this.userId;
+
+       //total counts contests
+      const brandData = await this.supabaseService.getBrandStoreID(this.store_id!);
+      this.brand = brandData || [];
+      this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
+
+      // 🔹 Admin can play contest
+      if (contestId && store_id) {
+        const admin = await this.supabaseService.adminPlay(store_id, contestId);
+
+        if (admin) {
+          this.admin_view = true;
+          this.showWelcomeScreen = true;
+          this.loading = false;
+          return;
+        }
+      }
+
        // 🔹 Location restriction check
       if (contestData.location) {
         const allowedCountries = contestData.location
@@ -247,22 +269,14 @@ export class MemoryWordComponent implements OnInit, OnDestroy {
         }
       }
 
-      this.store_id = contestData.store_id || null;
-      this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);     
-      this.userId = localStorage.getItem('userId')!;
-      this.isLoggedIn = !!this.userId;
-
-       //total counts contests
-      const brandData = await this.supabaseService.getBrandStoreID(this.store_id!);
-      this.brand = brandData || [];
-      this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
+      
       this.hasPlayed = await this.supabaseService.checkIfContestPlayed({
         contestId: this.contest.contest_id,
         customerId: this.userId ?? null,
         instaUserId: this.instaUserId ?? this.customerInstaId ?? null
       });
       // console.log('Has played status:', hasPlayed);
-      this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      // this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
       await this.loadCustomerInstaId();
       if (this.hasPlayed) {
         const data = await this.supabaseService.getUserResult({

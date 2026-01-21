@@ -1039,6 +1039,34 @@ async linkInstaCustomerToResults(params: {
   return true;
 }
 
+// admin-view for contest play
+async adminPlay(store_id: string, contest_id: string) { 
+  const { data, error } = await this.supabase
+    .from('contests')
+    .select(`
+      contest_id:id, contest_name:name, description, background_image, 
+      start_date, end_date, num_of_vouchers, is_private,
+      min_num_of_participants, max_num_of_tries_per_shop, 
+      max_num_of_tries_per_contest, max_num_of_vouchers_per_day, 
+      exclude_previous_winners, contest_type, offers, store_id, contest_created_at:created_at,
+      final_section, game_config, welcome_section, active,insta_post,insta_comment,insta_message,insta_post_url,location,
+      stores (
+        name,
+        logo,
+        links
+      )
+    `)
+    .eq('store_id', store_id)
+    .eq('id', contest_id)
+    .maybeSingle();  // <--- important to return single row
+
+  if (error) {
+    console.error('adminPlay error:', error);
+    return null;
+  }
+
+  return data;
+}
 
   
 
