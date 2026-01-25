@@ -246,6 +246,20 @@ export class DrapdropGameComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
       }
+       // Check if contest is active or not
+      if (!contestData.active) {
+        this.showWelcomeScreen = false;
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }   
+     
+      // Check if contest is exp date
+      if (this.contest_Expired) {
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }
 
        // 🔹 Location restriction check
       if (contestData.location) {
@@ -379,23 +393,6 @@ export class DrapdropGameComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
       }
 
-      
-
-       // Check if contest is active or not
-      if (!contestData.active) {
-        this.showWelcomeScreen = false;
-        this.showContesExpired = true;
-        this.loading = false;
-        return;
-      }
-      
-      
-      // Check if contest is exp date
-      if (this.contest_Expired) {
-        this.showContesExpired = true;
-        this.loading = false;
-        return;
-      }
       
       this.timer = this.contest?.game_config?.time_limit;
     

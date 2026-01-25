@@ -265,6 +265,20 @@ export class DinoGameComponent implements OnInit, OnDestroy, AfterViewInit {
           return;
         }
       }
+       // Check if contest is active or not
+      if (!contestData.active) {
+        this.showWelcomeScreen = false;
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }   
+     
+      // Check if contest is exp date
+      if (this.contest_Expired) {
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }
       
       // 🔹 Location restriction check
       if (contestData.location) {
@@ -403,20 +417,7 @@ export class DinoGameComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loading = false;
         return;
       }
-      // Check if contest is active or not
-      if (!contestData.active) {
-        this.showWelcomeScreen = false;
-        this.showContesExpired = true;
-        this.loading = false;
-        return;
-      }
-
-      // Check if contest is exp date
-      if (this.contest_Expired) {
-        this.showContesExpired = true;
-        this.loading = false;
-        return;
-      }
+      
 
       if (!this.contest.is_private) {
         this.showWelcomeScreen = true;

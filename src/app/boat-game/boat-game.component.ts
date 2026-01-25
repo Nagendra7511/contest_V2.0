@@ -266,7 +266,21 @@ export class BoatGameComponent implements AfterViewInit, OnDestroy, OnInit {
           return;
         }
       }
-
+      
+       // Check if contest is active or not
+      if (!contestData.active) {
+        this.showWelcomeScreen = false;
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }   
+     
+      // Check if contest is exp date
+      if (this.contest_Expired) {
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }
       
       this.giftImages = this.contest.game_config.images;
       if (contestData.location) {
@@ -399,19 +413,7 @@ export class BoatGameComponent implements AfterViewInit, OnDestroy, OnInit {
         this.loading = false;
         return;
       }
-      if (!contestData.active) {
-        this.showWelcomeScreen = false;
-        this.showContesExpired = true;
-        this.loading = false;
-        return;
-      }
-
-
-      if (this.contest_Expired) {
-        this.showContesExpired = true;
-        this.loading = false;
-        return;
-      }
+      
 
 
       if (!this.contest.is_private) {

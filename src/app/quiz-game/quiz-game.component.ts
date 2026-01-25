@@ -255,6 +255,21 @@ export class QuizGameComponent implements OnInit, OnDestroy {
         }
       }
 
+       // Check if contest is active or not
+      if (!contestData.active) {
+        this.showWelcomeScreen = false;
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }   
+     
+      // Check if contest is exp date
+      if (this.contest_Expired) {
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }
+      
       if (contestData.location) {
         const allowedCountries = contestData.location
           .split(',')
@@ -386,19 +401,7 @@ export class QuizGameComponent implements OnInit, OnDestroy {
         this.loading = false;
         return;
       }
-      if (!contestData.active) {
-        this.showWelcomeScreen = false;
-        this.showContesExpired = true;
-        this.loading = false;
-        return;
-      }
-
       
-      if (this.contest_Expired) {
-        this.showContesExpired = true;
-        this.loading = false;
-        return;
-      }
 
       const gameConfig = typeof contestData.game_config === 'string'
         ? JSON.parse(contestData.game_config)

@@ -248,6 +248,20 @@ customerInstaId: string | null = null;
           return;
         }
       }
+       // Check if contest is active or not
+      if (!contestData.active) {
+        this.showWelcomeScreen = false;
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }   
+     
+      // Check if contest is exp date
+      if (this.contest_Expired) {
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }
       
       this.brandImages = this.contest.game_config.images;
       if (contestData.location) {
@@ -381,19 +395,7 @@ customerInstaId: string | null = null;
         this.loading = false;
         return;
       }
-      if (!contestData.active) {
-        this.showWelcomeScreen = false;
-        this.showContesExpired = true;
-        this.loading = false;
-        return;
-      }
-
-      if (this.contest_Expired) {
-        this.showContesExpired = true;
-        this.loading = false;
-        return;
-      }
-
+      
       if (!this.contest.is_private) {
         this.showWelcomeScreen = true;
         this.loading = false;

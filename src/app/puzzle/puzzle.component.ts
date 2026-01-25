@@ -247,6 +247,20 @@ export class PuzzleComponent implements OnInit, OnDestroy {
           return;
         }
       }
+       // Check if contest is active or not
+      if (!contestData.active) {
+        this.showWelcomeScreen = false;
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }   
+     
+      // Check if contest is exp date
+      if (this.contest_Expired) {
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }
             
        // 🔹 Location restriction check
       if (contestData.location) {
@@ -377,21 +391,6 @@ export class PuzzleComponent implements OnInit, OnDestroy {
       // Check if contest is Loggedin or not
        if (!this.isLoggedIn) {
         this.showLoginButton = true;
-        this.loading = false;
-        return;
-      }
-       // Check if contest is active or not
-      if (!contestData.active) {
-        this.showWelcomeScreen = false;
-        this.showContesExpired = true;
-        this.loading = false;
-        return;
-      }
-      
-     
-      // Check if contest is exp date
-      if (this.contest_Expired) {
-        this.showContesExpired = true;
         this.loading = false;
         return;
       }

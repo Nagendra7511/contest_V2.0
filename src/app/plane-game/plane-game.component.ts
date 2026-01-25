@@ -350,7 +350,21 @@ private loadGiftImages(timeout = 5000): Promise<void> {
           return;
         }
       }
-
+       // Check if contest is active or not
+      if (!contestData.active) {
+        this.showWelcomeScreen = false;
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }   
+     
+      // Check if contest is exp date
+      if (this.contest_Expired) {
+        this.showContesExpired = true;
+        this.loading = false;
+        return;
+      }
+      
       this.giftImageUrls = (this.contest?.game_config?.images || []).slice();
       if (contestData.location) {
         const allowedCountries = contestData.location
@@ -481,19 +495,7 @@ private loadGiftImages(timeout = 5000): Promise<void> {
         this.loading = false;
         return;
       }
-      if (!contestData.active) {
-        this.showWelcomeScreen = false;
-        this.showContesExpired = true;
-        this.loading = false;
-        return;
-      }
-
-      
-      if (this.contest_Expired) {
-        this.showContesExpired = true;
-        this.loading = false;
-        return;
-      }
+  
 
       if (!this.contest.is_private) {
         this.showWelcomeScreen = true;
