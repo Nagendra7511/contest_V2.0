@@ -5,10 +5,11 @@ import { BannerComponent } from '../banner/banner.component';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Renderer2 , ElementRef } from '@angular/core';
+import { PricingComponent } from '../pricing/pricing.component';
 
 @Component({
   selector: 'app-home',
-  imports: [ RouterLink, RouterOutlet, CommonModule],
+  imports: [ RouterLink, RouterOutlet, CommonModule, PricingComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

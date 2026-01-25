@@ -593,9 +593,18 @@
 /* How It Works */
 .how-it-works {
     padding: 80px 0;
+    /* background: #f8f9fa; */
+}
+.pricing-grid
+{
+    padding: 80px 0;
     background: #f8f9fa;
 }
-
+.bg-white
+{
+    /* padding: 80px 0; */
+    background: #f8f9fa;
+}
 .steps {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
