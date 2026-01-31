@@ -18,7 +18,7 @@
   <div class="brand-profile-left" (click)="goToBrandInfo()" data-target="_blank">
     <div class="gradient-ring">
       <div class="brand-profile-image" >
-        <img [src]="contest?.stores?.logo" alt="brand Logo" />
+        <img [src]="contest?.stores?.logo || '/images/brand_icon.png'" alt="Brand Logo"/>
       </div>
     </div>
   </div>
@@ -275,7 +275,7 @@
   <div class="game-panel-brand-logo">
         <div class="game-panel-brand-profile-icon">
             <div class="brand-profile-image">
-                <img [src]="contest?.stores?.logo" alt="brand Logo" />
+                <img [src]="contest?.stores?.logo || '/images/brand_icon.png'" alt="Brand Logo"/>
             </div>
             <h2 class="brand-profile-name">{{contest?.stores?.name}}</h2>
         </div>
