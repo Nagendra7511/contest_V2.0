@@ -305,7 +305,9 @@ private loadGiftImages(timeout = 5000): Promise<void> {
       
       const now = new Date();
       const expDate = new Date(contestData.end_date);
-      this.contest_Expired = expDate < now;
+      expDate.setHours(23, 59, 59, 999); // end of day
+
+      this.contest_Expired = now > expDate;
 
       const timeDiff = expDate.getTime() - now.getTime();
       this.daysLeft = Math.max(0, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)));
