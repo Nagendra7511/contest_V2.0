@@ -55,7 +55,7 @@ export class BrandInfoComponent {
     this.brand = (brandData || []).map((item: any) => {
       const now = new Date();
       const expDate = new Date(item.end_date);
-
+      expDate.setHours(23, 59, 59, 999);
       return {
         ...item,
         expired: expDate < now   // ← Add per-item flag

@@ -82,10 +82,12 @@ export class ContestsComponent implements OnInit {
     this.contestsBrand = this.brandContests
   .filter((contest: any) => {
     const expDate = new Date(contest.end_date);
+    expDate.setHours(23, 59, 59, 999);
     return expDate >= now;
   })
   .map((contest: any) => {
     const expDate = new Date(contest.end_date);
+    expDate.setHours(23, 59, 59, 999);
     const timeDiff = expDate.getTime() - now.getTime();
     const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Only days
     return {
@@ -115,10 +117,12 @@ export class ContestsComponent implements OnInit {
     this.contestsPublic = publicContests
   .filter(contest => {
     const expDate = new Date(contest.end_date);
+    expDate.setHours(23, 59, 59, 999);
     return expDate >= now;
   })
   .map(contest => {
     const expDate = new Date(contest.end_date);
+    expDate.setHours(23, 59, 59, 999);
     const timeDiff = expDate.getTime() - now.getTime();
     const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
     return {
@@ -144,10 +148,12 @@ export class ContestsComponent implements OnInit {
     this.contestsPrivate = privateContests
   .filter(contest => {
     const expDate = new Date(contest.end_date);
+    expDate.setHours(23, 59, 59, 999);
     return expDate >= now;
   })
   .map(contest => {
     const expDate = new Date(contest.end_date);
+    expDate.setHours(23, 59, 59, 999);
     const timeDiff = expDate.getTime() - now.getTime();
     const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
     return {
