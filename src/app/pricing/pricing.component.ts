@@ -8,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class PricingComponent {
 
+  currency: 'INR' | 'USD' = 'USD';
+
+  changeCurrency(type: 'INR' | 'USD') {
+    this.currency = type;
+  }
+
 }

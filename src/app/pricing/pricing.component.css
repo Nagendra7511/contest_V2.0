@@ -76,7 +76,9 @@
 
         .original-price {
             font-size: 18px;
-            color: #999;
+            /* color: #999; */
+            font-style: italic;
+            font-weight: 600;
             text-decoration: line-through;
         }
 
@@ -89,7 +91,7 @@
 
         .price-period {
             font-size: 20px;
-            color: #666;
+            /* color: #666; */
             font-weight: 400;
         }
 
@@ -191,7 +193,29 @@
         .feature-item.disabled::before {
             color: #ccc;
         }
+        /* pricing.component.scss */
 
+.currency-switcher {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.currency-btn {
+    border: none;
+    padding: 10px 22px;
+    border-radius: 30px;
+    cursor: pointer;
+    background: #ececec;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.currency-btn.active {
+    background: #111;
+    color: #fff;
+}
         @media (max-width: 1200px) {
             .pricing-grid {
                 grid-template-columns: repeat(3, 1fr);
