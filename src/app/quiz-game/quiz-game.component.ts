@@ -197,6 +197,19 @@ export class QuizGameComponent implements OnInit, OnDestroy {
       if (!contestData) throw new Error('Contest not found');
       this.contest = contestData;
 
+      const gameConfig = typeof contestData.game_config === 'string'
+        ? JSON.parse(contestData.game_config)
+        : contestData.game_config;
+
+      // prefer questions field
+      this.questions = (gameConfig.questions as Question[]) ?? [];
+      if (!this.questions.length && gameConfig.questions) {
+        this.questions = (gameConfig.questions as any) ?? [];
+      }
+
+      if (!this.questions.length) throw new Error('No questions found in contest config');
+
+
       const now = new Date();
       const expDate = new Date(contestData.end_date);
       expDate.setHours(23, 59, 59, 999); // end of day
@@ -405,18 +418,7 @@ export class QuizGameComponent implements OnInit, OnDestroy {
       }
       
 
-      const gameConfig = typeof contestData.game_config === 'string'
-        ? JSON.parse(contestData.game_config)
-        : contestData.game_config;
-
-      // prefer questions field
-      this.questions = (gameConfig.questions as Question[]) ?? [];
-      if (!this.questions.length && gameConfig.questions) {
-        this.questions = (gameConfig.questions as any) ?? [];
-      }
-
-      if (!this.questions.length) throw new Error('No questions found in contest config');
-
+      
 
       if (!this.contest.is_private) {
         this.showWelcomeScreen = true;
@@ -541,10 +543,8 @@ nextQuestionSmooth(): void {
     this.currentIndex = 0;
     this.matchScore = 0;
     this.isGameOver = false;
-
     // updated to questions
     this.loadCurrentQuestion();
-
     this.loading = false;
 
     this.analyticsService.sendEvent('game_start', {
@@ -554,7 +554,7 @@ nextQuestionSmooth(): void {
 
     if (!isPlatformBrowser(this.platformId)) return;
 
-    this.secondsLeft = this.contest?.game_config?.timer || 90;
+    this.secondsLeft = this.contest?.game_config?.timer || 120;
     this.updateTimeDisplay();
     this.startTimer();
   }
