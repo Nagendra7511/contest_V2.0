@@ -40,6 +40,8 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
   private animationFrame: any;
   ex_date: any;
   participationCount: number | null = null;
+  totalparticipationCount: number | null = null;
+
   gameResult: any;
   showGameResult = false;
   voucher_Code: string = 'Better Luck';
@@ -226,7 +228,8 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
         this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
 
 
-        this.participationCount = await this.supaBaseService.getContestCount(contestId)
+        this.participationCount = await this.supaBaseService.getContestCount(contestId);
+          this.totalparticipationCount = await this.supaBaseService.getTotalBrandParticipantCount(this.contest.contest_id);
         if (brandContest) {
           this.contest = brandContest;
            this.prepareWheel();
@@ -239,6 +242,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
 
       this.store_id = contestData.store_id || null;
       this.participationCount = await this.supaBaseService.getContestCount(this.contest.contest_id);
+        this.totalparticipationCount = await this.supaBaseService.getTotalBrandParticipantCount(this.contest.contest_id);
       this.userId = localStorage.getItem('userId')!;
       this.isLoggedIn = !!this.userId;
 
@@ -670,6 +674,7 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
     this.confetti = true;
     setTimeout(async () => {
       this.participationCount = await this.supaBaseService.getContestCount(this.contest.contest_id);
+        this.totalparticipationCount = await this.supaBaseService.getTotalBrandParticipantCount(this.contest.contest_id);
       // console.log('Participation count:', this.participationCount);
       this.pauseMusic();
       this.confetti = false;

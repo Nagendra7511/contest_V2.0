@@ -55,6 +55,7 @@ export class QuizGameComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   isContestAssigned = false;
   participationCount: number | null = null;
+  totalparticipationCount: number | null = null;
   score = 0;
 
   // updated -> questions
@@ -88,7 +89,6 @@ export class QuizGameComponent implements OnInit, OnDestroy {
   customerInstaId: string | null = null;
   private endGameTriggered = false;
   private resultSaving = false;
-  totalparticipationCount: number | null = null;
 
 
 
@@ -231,7 +231,7 @@ export class QuizGameComponent implements OnInit, OnDestroy {
         this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
 
         this.participationCount = await this.supabaseService.getContestCount(contestId);
-        this.totalparticipationCount =  await this.supabaseService.getTotalBrandParticipantCount(this.contestId);
+          this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
         if (brandContest) {
           this.contest = brandContest;
           const gameConfig = typeof brandContest.game_config === 'string'
@@ -255,7 +255,7 @@ export class QuizGameComponent implements OnInit, OnDestroy {
 
       this.store_id = contestData.store_id || null;
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
-      this.totalparticipationCount =  await this.supabaseService.getTotalBrandParticipantCount(this.contestId);
+      this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
       this.userId = localStorage.getItem('userId')!;
       this.isLoggedIn = !!this.userId;
 
@@ -631,6 +631,7 @@ nextQuestionSmooth(): void {
     setTimeout(async () => {
       this.isGameOver = true;
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
       this.pauseMusic();
       this.showGamePanel = false;
       if (!this.isLoggedIn) {

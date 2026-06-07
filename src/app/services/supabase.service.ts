@@ -203,75 +203,75 @@ async getAllContest_assigned(userId: string) {
 
   // update contest results
   async updateContestResults(result: {
-  contest_id: string;
-  customer_id?: string | null;
-  insta_user_id?: string | null;
-  is_winner: boolean;
-  score: string | number | null;
-  voucher_assigned?: string;
-  expiry_date?: string | null;
-}) {
-  const { contest_id, customer_id, insta_user_id } = result;
+    contest_id: string;
+    customer_id?: string | null;
+    insta_user_id?: string | null;
+    is_winner: boolean;
+    score: string | number | null;
+    voucher_assigned?: string;
+    expiry_date?: string | null;
+  }) {
+    const { contest_id, customer_id, insta_user_id } = result;
 
-  if (!contest_id) {
-    throw new Error('Missing contest_id');
-  }
+    if (!contest_id) {
+      throw new Error('Missing contest_id');
+    }
 
-  if (!customer_id && !insta_user_id) {
-    throw new Error('Missing user identifier');
-  }
+    if (!customer_id && !insta_user_id) {
+      throw new Error('Missing user identifier');
+    }
 
-  /* -------------------------------------------------
-     1️⃣ CHECK IF RESULT EXISTS FOR CONTEST
-     (ANY USER)
-  ------------------------------------------------- */
-  const query = this.supabase
-  .from('contest_results')
-  .select('id')
-  .eq('contest_id', contest_id);
+    /* -------------------------------------------------
+       1️⃣ CHECK IF RESULT EXISTS FOR CONTEST
+       (ANY USER)
+    ------------------------------------------------- */
+    const query = this.supabase
+      .from('contest_results')
+      .select('id')
+      .eq('contest_id', contest_id);
 
-if (customer_id) {
-  query.eq('customer_id', customer_id);
-} else if (insta_user_id) {
-  query.eq('insta_user_id', insta_user_id);
-}
+    if (customer_id) {
+      query.eq('customer_id', customer_id);
+    } else if (insta_user_id) {
+      query.eq('insta_user_id', insta_user_id);
+    }
 
-const { data: existing } = await query.maybeSingle();
+    const { data: existing } = await query.maybeSingle();
 
-  if (existing) {
-    // ❌ Result already exists → SKIP
+    if (existing) {
+      // Result already exists → SKIP
+      return {
+        skipped: true,
+        reason: 'Result already exists for contest'
+      };
+    }
+
+    /* -------------------------------------------------
+       2️⃣ INSERT RESULT (FIRST & ONLY ENTRY)
+    ------------------------------------------------- */
+    const insertPayload = {
+      contest_id,
+      customer_id: customer_id ?? null,
+      insta_user_id: insta_user_id ?? null,
+      is_winner: result.is_winner,
+      score: result.score,
+      voucher_assigned: result.voucher_assigned ?? '',
+      expiry_date: result.expiry_date ?? null
+    };
+
+    const { error } = await this.supabase
+      .from('contest_results')
+      .insert(insertPayload);
+
+    if (error) {
+      // console.error('Insert error:', error);
+      return { skipped: false, error };
+    }
+
     return {
-      skipped: true,
-      reason: 'Result already exists for contest'
+      inserted: true
     };
   }
-
-  /* -------------------------------------------------
-     2️⃣ INSERT RESULT (FIRST & ONLY ENTRY)
-  ------------------------------------------------- */
-  const insertPayload = {
-    contest_id,
-    customer_id: customer_id ?? null,
-    insta_user_id: insta_user_id ?? null,
-    is_winner: result.is_winner,
-    score: result.score,
-    voucher_assigned: result.voucher_assigned ?? '',
-    expiry_date: result.expiry_date ?? null
-  };
-
-  const { error } = await this.supabase
-    .from('contest_results')
-    .insert(insertPayload);
-
-  if (error) {
-    // console.error('Insert error:', error);
-    return { skipped: false, error };
-  }
-
-  return {
-    inserted: true
-  };
-}
 
    // get Participation count
    async getContestCount(contestId: number | string) {
@@ -1068,7 +1068,21 @@ async adminPlay(store_id: string, contest_id: string) {
   return data;
 }
 
-  
+async getTotalBrandParticipantCount(contestId: string) {
+
+  const contest = await this.getContestById(contestId);
+
+  if (!contest?.store_id) {
+    return 0;
+  }
+
+  const brandContests = await this.getBrandStoreID(contest.store_id);
+
+  return (brandContests || []).reduce(
+    (sum: number, c: any) => sum + (c.result_count || 0),
+    0
+  );
+}
 
 }
 

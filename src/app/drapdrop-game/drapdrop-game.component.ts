@@ -96,6 +96,8 @@ export class DrapdropGameComponent implements OnInit, AfterViewInit, OnDestroy {
   public showGamePanel = false;
   public showGameUpdate = false;
   participationCount: number | null = null;
+  totalparticipationCount: number | null = null;
+
   finalScore: number = 0;
   showGameResult = false;
   gameResult: any;
@@ -218,6 +220,7 @@ export class DrapdropGameComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
         this.participationCount = await this.supabaseService.getContestCount(contestId)
+        this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
         if (brandContest) {
           this.contest = brandContest;
           this.showWelcomeScreen = true;
@@ -231,6 +234,7 @@ export class DrapdropGameComponent implements OnInit, AfterViewInit, OnDestroy {
       
       this.store_id = contestData.store_id || null;
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
       this.userId = localStorage.getItem('userId')!;
       this.isLoggedIn = !!this.userId;
 
@@ -749,6 +753,7 @@ export class DrapdropGameComponent implements OnInit, AfterViewInit, OnDestroy {
   openPopup() {
     setTimeout(async () => {
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
       this.pauseMusic();
       this.showWelcomeScreen = false;
       this.showGamePanel = false;

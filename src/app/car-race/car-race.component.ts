@@ -70,6 +70,8 @@ export class CarRaceComponent implements AfterViewInit, OnDestroy {
   isLoggedIn = false;
   isContestAssigned = false;
   participationCount: number | null = null;
+  totalparticipationCount: number | null = null;
+
 
 
   contest_Expired = false;
@@ -262,6 +264,7 @@ private endGameTriggered = false;
         this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
 
         this.participationCount = await this.supabaseService.getContestCount(contestId);
+          this.totalparticipationCount =  await this.supabaseService.getTotalBrandParticipantCount(contestId);
         if (brandContest) {
           this.contest = brandContest;
           this.giftImages = this.contest.game_config.images;
@@ -274,6 +277,7 @@ private endGameTriggered = false;
 
       this.store_id = contestData.store_id || null;
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
       this.userId = localStorage.getItem('userId')!;
       this.isLoggedIn = !!this.userId;
 
@@ -1534,6 +1538,7 @@ private endGameTriggered = false;
         this.ngZone.run(() => {
           setTimeout(async () => {
             this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+            this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
             this.pauseMusic();
             this.showGamePanel = false;
             if (!this.isLoggedIn) {

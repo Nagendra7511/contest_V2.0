@@ -59,6 +59,8 @@ export class FlappyGameComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   isContestAssigned = false;
   participationCount: number | null = null;
+  totalparticipationCount: number | null = null;
+
   contest_Expired = false;
   showContesExpired = false;
   confetti = false;
@@ -233,6 +235,7 @@ export class FlappyGameComponent implements OnInit, OnDestroy {
 
 
         this.participationCount = await this.supabaseService.getContestCount(contestId)
+        this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
         if (brandContest) {
           this.contest = brandContest;
           this.showWelcomeScreen = true;
@@ -244,6 +247,7 @@ export class FlappyGameComponent implements OnInit, OnDestroy {
 
       this.store_id = contestData.store_id || null;
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
       this.userId = localStorage.getItem('userId')!;
       this.isLoggedIn = !!this.userId;
 
@@ -779,6 +783,7 @@ drawStartScreen() {
 
     setTimeout(async () => {     
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
       this.pauseMusic();
       this.showGamePanel = false;
       if (!this.isLoggedIn) {

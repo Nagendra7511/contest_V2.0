@@ -72,6 +72,8 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   isContestAssigned = false;
   participationCount: number | null = null;
+  totalparticipationCount: number | null = null;
+
   score = 0;
 
   showModal = false;
@@ -225,7 +227,8 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
         this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
 
 
-        this.participationCount = await this.supabaseService.getContestCount(contestId)
+        this.participationCount = await this.supabaseService.getContestCount(contestId);
+        this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
         if (brandContest) {
           this.contest = brandContest;
           this.showWelcomeScreen = true;
@@ -237,6 +240,7 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
       
       this.store_id = contestData.store_id || null;
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
       this.userId = localStorage.getItem('userId')!;
       this.isLoggedIn = !!this.userId;
 
@@ -693,6 +697,7 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       (async () => {
         this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+        this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
         this.pauseMusic();
         this.showGamePanel = false;
         if (!this.isLoggedIn) {

@@ -64,6 +64,8 @@ export class DinoGameComponent implements OnInit, OnDestroy, AfterViewInit {
   isLoggedIn = false;
   isContestAssigned = false;
   participationCount: number | null = null;
+  totalparticipationCount: number | null = null;
+
   contest_Expired = false;
   showContesExpired = false;
   confetti = false;
@@ -239,6 +241,7 @@ export class DinoGameComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
         this.participationCount = await this.supabaseService.getContestCount(contestId)
+        this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
         if (brandContest) {
           this.contest = brandContest;
           this.showWelcomeScreen = true;
@@ -250,6 +253,7 @@ export class DinoGameComponent implements OnInit, OnDestroy, AfterViewInit {
 
       this.store_id = contestData.store_id || null;
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
       this.userId = localStorage.getItem('userId')!;
       this.isLoggedIn = !!this.userId;
 
@@ -810,6 +814,7 @@ export class DinoGameComponent implements OnInit, OnDestroy, AfterViewInit {
 
     setTimeout(async () => {
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
       this.pauseMusic();
       this.showGamePanel = false;
       this.showGameResult = true;

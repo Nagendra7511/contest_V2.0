@@ -44,6 +44,8 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
   public loading = true;
   private userId: string | null = null;
   participationCount: number | null = null;
+  totalparticipationCount: number | null = null;
+
 
   private isDrawing = false;
   private rewardSent = false;
@@ -235,7 +237,8 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
 
 
-        this.participationCount = await this.supabaseService.getContestCount(contestId)
+        this.participationCount = await this.supabaseService.getContestCount(contestId);
+          this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
         if (brandContest) {
           this.contest = brandContest;
           this.showWelcomeScreen = true;
@@ -247,6 +250,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
       
       this.store_id = contestData.store_id || null;
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
       this.userId = localStorage.getItem('userId')!;
       this.isLoggedIn = !!this.userId;
 
@@ -644,6 +648,7 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
       setTimeout(() => {
         (async () => {
           this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+          this.totalparticipationCount = await this.supabaseService.getTotalBrandParticipantCount(this.contest.contest_id);
           // console.log('Participation count:', this.participationCount);
           this.pauseMusic();
           this.confetti = false;
