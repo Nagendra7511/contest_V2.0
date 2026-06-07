@@ -112,6 +112,8 @@ export class DrapdropGameComponent implements OnInit, AfterViewInit, OnDestroy {
   insta_flow_LoginButton = false;
   hasPlayed = false;
   customerInstaId: string | null = null;
+  private endGameTriggered = false;
+  private resultSaving = false;
 
 
   correctItems: { [key: string]: string[] } = {};
@@ -713,6 +715,14 @@ export class DrapdropGameComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   private finishGame(): void {
+     // Prevent duplicate execution
+    if (this.endGameTriggered) {
+      // console.log('endGame already triggered');
+      return;
+    }
+
+    this.endGameTriggered = true;
+
     this.gameOver = true;
     clearInterval(this.timerInterval);
 
@@ -801,7 +811,12 @@ export class DrapdropGameComponent implements OnInit, AfterViewInit, OnDestroy {
   triggerFireworks() { }
 
   private async sendResultToApi(isWinner: boolean, finalScore: number): Promise<void> {
-
+   if (this.resultSaving) {
+    // console.log('Result already being saved');
+    return;
+  }
+  this.resultSaving = true;
+  
   if (!this.contest.contestId) {
     // console.error('Missing contestId. Aborting API call.');
     return;

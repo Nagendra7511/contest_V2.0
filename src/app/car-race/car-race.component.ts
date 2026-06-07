@@ -88,6 +88,8 @@ export class CarRaceComponent implements AfterViewInit, OnDestroy {
 insta_flow_LoginButton = false;
 hasPlayed = false;
 customerInstaId: string | null = null;
+private endGameTriggered = false;
+  private resultSaving = false;
 
   private giftImages: HTMLImageElement[] = [];
   private powerSymbols: { x: number; y: number; alpha: number; text: string }[] = [];
@@ -1571,7 +1573,12 @@ customerInstaId: string | null = null;
   }
 
   private async sendResultToApi(isWinner: boolean, score: number): Promise<void> {
-
+  if (this.resultSaving) {
+    // console.log('Result already being saved');
+    return;
+  }
+  this.resultSaving = true;
+  
   if (!this.contestId) {
     // console.error('Missing contestId. Aborting API call.');
     return;

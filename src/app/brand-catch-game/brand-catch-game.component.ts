@@ -80,9 +80,11 @@ export class BrandCatchGameComponent implements OnInit, OnDestroy {
   isMusicPlaying = false;
   profile: any = null;
   instaUserId: string | null = null;
-insta_flow_LoginButton = false;
-hasPlayed = false;
-customerInstaId: string | null = null;
+  insta_flow_LoginButton = false;
+  hasPlayed = false;
+  customerInstaId: string | null = null;
+  private endGameTriggered = false;
+  private resultSaving = false;
 
   // brandImages = [
   //   'https://i.postimg.cc/FFccrS7R/flappy.png',
@@ -701,6 +703,14 @@ customerInstaId: string | null = null;
 
   /** End game */
   finishGame() {
+     // Prevent duplicate execution
+    if (this.endGameTriggered) {
+      // console.log('endGame already triggered');
+      return;
+    }
+
+    this.endGameTriggered = true;
+
     if (this.gameOver) return;
     this.gameOver = true;
 
@@ -737,7 +747,12 @@ customerInstaId: string | null = null;
   }
 
   private async sendResultToApi(isWinner: boolean, score: number): Promise<void> {
-
+  if (this.resultSaving) {
+    // console.log('Result already being saved');
+    return;
+  }
+  this.resultSaving = true;
+  
   if (!this.contestId) {
     // console.error('Missing contestId. Aborting API call.');
     return;

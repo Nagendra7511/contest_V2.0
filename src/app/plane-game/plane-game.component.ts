@@ -108,6 +108,8 @@ export class PlaneGameComponent implements AfterViewInit, OnDestroy {
   insta_flow_LoginButton = false;
   hasPlayed = false;
   customerInstaId: string | null = null;
+  private endGameTriggered = false;
+  private resultSaving = false;
   
   constructor(
     private router: Router,
@@ -1145,7 +1147,12 @@ private loadGiftImages(timeout = 5000): Promise<void> {
   }
   
   private async sendResultToApi(isWinner: boolean, score: number): Promise<void> {
-
+   if (this.resultSaving) {
+    // console.log('Result already being saved');
+    return;
+  }
+  this.resultSaving = true;
+  
   if (!this.contestId) {
     // console.error('Missing contestId. Aborting API call.');
     return;

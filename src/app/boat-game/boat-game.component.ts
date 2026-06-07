@@ -90,6 +90,8 @@ export class BoatGameComponent implements AfterViewInit, OnDestroy, OnInit {
   hasPlayed = false;
   private resultSent = false;
   customerInstaId: string | null = null;
+  private endGameTriggered = false;
+  private resultSaving = false;
 
   profile: any = null;
   // Tap-to-play state
@@ -1314,6 +1316,12 @@ private spawnGift() {
   }
 
   private async sendResultToApi(isWinner: boolean, score: number): Promise<void> {
+      if (this.resultSaving) {
+    // console.log('Result already being saved');
+    return;
+  }
+
+  this.resultSaving = true;
 
   if (!this.contestId) {
     // console.error('Missing contestId. Aborting API call.');

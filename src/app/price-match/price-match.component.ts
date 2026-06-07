@@ -83,6 +83,8 @@ export class PriceMatchComponent implements OnInit, OnDestroy {
   insta_flow_LoginButton = false;
   hasPlayed = false;
   customerInstaId: string | null = null;
+  private endGameTriggered = false;
+  private resultSaving = false;
 
   constructor(
     private router: Router,
@@ -620,6 +622,14 @@ export class PriceMatchComponent implements OnInit, OnDestroy {
   }
 
   endGame(): void {
+     // Prevent duplicate execution
+    if (this.endGameTriggered) {
+      // console.log('endGame already triggered');
+      return;
+    }
+
+    this.endGameTriggered = true;
+
     if (!isPlatformBrowser(this.platformId)) return;
     if (this.timer) clearInterval(this.timer);
     const timeBonus = this.secondsLeft;
@@ -643,7 +653,12 @@ export class PriceMatchComponent implements OnInit, OnDestroy {
   }
 
   private async sendResultToApi(isWinner: boolean, score: number): Promise<void> {
-
+   if (this.resultSaving) {
+    // console.log('Result already being saved');
+    return;
+  }
+  this.resultSaving = true;
+  
   if (!this.contestId) {
     // console.error('Missing contestId. Aborting API call.');
     return;

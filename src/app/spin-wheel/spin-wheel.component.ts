@@ -61,6 +61,8 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
   insta_flow_LoginButton = false;
   hasPlayed = false;
   customerInstaId: string | null = null;
+  private endGameTriggered = false;
+  private resultSaving = false;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -713,6 +715,12 @@ export class SpinWheelComponent implements OnInit, OnDestroy {
 
 
   async sendResultToApi(prize: any, voucher: string, isWinner: boolean, contestId: string): Promise<void> {
+     if (this.resultSaving) {
+    // console.log('Result already being saved');
+    return;
+  }
+  this.resultSaving = true;
+  
     const userId = localStorage.getItem('userId');
       if (!this.contest.contestId) {
     // // console.error('Missing contestId. Aborting API call.');

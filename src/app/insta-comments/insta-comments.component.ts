@@ -486,7 +486,7 @@ export class InstaCommentsComponent implements OnInit, OnDestroy {
 
 
   private async sendResultToApi(isWinner: boolean): Promise<void> {
-
+  
   if (!this.contestId) {
     // console.error('Missing contestId. Aborting API call.');
     return;

@@ -86,6 +86,10 @@ export class QuizGameComponent implements OnInit, OnDestroy {
   insta_flow_LoginButton = false;
   hasPlayed = false;
   customerInstaId: string | null = null;
+  private endGameTriggered = false;
+  private resultSaving = false;
+  totalparticipationCount: number | null = null;
+
 
 
   constructor(
@@ -227,6 +231,7 @@ export class QuizGameComponent implements OnInit, OnDestroy {
         this.totalResultCount = this.brand.reduce((sum: number, contest: any) => sum + (contest.result_count || 0), 0);
 
         this.participationCount = await this.supabaseService.getContestCount(contestId);
+        this.totalparticipationCount =  await this.supabaseService.getTotalBrandParticipantCount(this.contestId);
         if (brandContest) {
           this.contest = brandContest;
           const gameConfig = typeof brandContest.game_config === 'string'
@@ -250,6 +255,7 @@ export class QuizGameComponent implements OnInit, OnDestroy {
 
       this.store_id = contestData.store_id || null;
       this.participationCount = await this.supabaseService.getContestCount(this.contest.contest_id);
+      this.totalparticipationCount =  await this.supabaseService.getTotalBrandParticipantCount(this.contestId);
       this.userId = localStorage.getItem('userId')!;
       this.isLoggedIn = !!this.userId;
 
@@ -606,6 +612,14 @@ nextQuestionSmooth(): void {
   }
 
   endGame(): void {
+     // Prevent duplicate execution
+    if (this.endGameTriggered) {
+      // console.log('endGame already triggered');
+      return;
+    }
+
+    this.endGameTriggered = true;
+
     if (!isPlatformBrowser(this.platformId)) return;
     if (this.timer) clearInterval(this.timer);
     const timeBonus = this.secondsLeft;
@@ -629,6 +643,13 @@ nextQuestionSmooth(): void {
   }
 
   private async sendResultToApi(isWinner: boolean, score: number): Promise<void> {
+  
+  if (this.resultSaving) {
+    // console.log('Result already being saved');
+    return;
+  }
+
+  this.resultSaving = true;
 
   if (!this.contestId) {
     // console.error('Missing contestId. Aborting API call.');

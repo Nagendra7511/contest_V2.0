@@ -69,6 +69,8 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
   insta_flow_LoginButton = false;
   hasPlayed = false;
   customerInstaId: string | null = null;
+  private endGameTriggered = false;
+  private resultSaving = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -702,6 +704,12 @@ export class ScratchCardComponent implements OnInit, AfterViewInit, OnDestroy {
   // }
 
   private sendResultToApi(offer: any, voucher: string, contestId: string, isWinner: boolean): void {
+   if (this.resultSaving) {
+    // console.log('Result already being saved');
+    return;
+  }
+  this.resultSaving = true;
+  
    if (!this.contest.contestId) {
     // // console.error('Missing contestId. Aborting API call.');
     return;
